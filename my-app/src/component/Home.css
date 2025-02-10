@@ -1,0 +1,298 @@
+/* Sidebar Styles */
+.sidebar-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    /* background-color: #f4f4f4; */
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #007c89;
+    color: #fff;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+.sidebar-button {
+    display: block;
+    width: 100%;
+    background: none;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px 0;
+    margin-bottom: 15px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-button:hover {
+    background-color:white;
+    color: #449099;
+
+}
+
+.sidebar-img {
+    width: 100%;
+    margin-top: 180px;
+}
+
+/* Main Content Styles */
+.main-content {
+    margin-left: 20%;
+    padding: 20px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f4;
+
+}
+
+.card-grid {
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 500px;
+    /* height:800px; */
+    padding: 80px;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    background-color: #fff;
+    border: 2px solid #007c89;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icon {
+    font-size: 2rem;
+    color: #007c89;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007c89;
+    text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 30%;
+    }
+
+    .main-content {
+        margin-left: 30%;
+        width: 70%;
+    }
+
+    .card {
+        width: 120px;
+        height: 120px;
+    }
+
+    .icon {
+        font-size: 1.5rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        width: 40%;
+    }
+
+    .main-content {
+        margin-left: 40%;
+        width: 60%;
+    }
+
+    .card {
+        width: 100px;
+        height: 100px;
+    }
+
+    .icon {
+        font-size: 1.2rem;
+    }
+
+    .card-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Modal Styles */
+.campaign-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.campaign-modal-content {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.campaign-modal-content h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.modal-input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.modal-create-button {
+    background: #007c89;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.modal-create-button:hover {
+    background-color: #025e68;
+}
+
+/* Add this CSS to center the toast content */
+.custom-toast .Toastify__toast {
+    display: flex;
+    justify-content: center;
+    /* Horizontally center */
+    align-items: center;
+    /* Vertically center */
+}
+
+.cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #65bbc5, #007c89);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.cards:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.cards .icons {
+    font-size: 50px;
+    margin-bottom: 10px;
+    transition: transform 0.3s ease;
+}
+
+.cards:hover .icons {
+    transform: rotateY(180deg);
+}
+
+.card-texts {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.logout-content {
+    background: #ffff;
+    border: 2px solid #fff;
+    outline: none;
+    color: #007c89;
+    font-size: 18px;
+    padding: 10px;
+    margin-top: 400px;
+    text-align: center;
+    cursor: pointer;
+    width:100%;
+    border-radius: 10px;
+    display: flex;
+    justify-content:center;
+      transition: all 0.3s ease-in-out;
+
+}
+.icon-log{
+    margin-left: 10px;
+    font-size: 20px;
+    transition: transform 0.3s ease-in-out;
+
+}
+.logout-content:hover .icon-log {
+    animation: moveIcon 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes moveIcon {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(5px);
+        /* Move icon slightly to the right */
+    }
+}
