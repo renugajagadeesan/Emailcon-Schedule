@@ -132,7 +132,7 @@ if (excelData.length > 1) {
             previewtext,
             previewContent,bgColor,
             sentEmails,failedEmails,
-            scheduledTime:"no schedule",
+            scheduledTime:new Date().toLocaleString(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,

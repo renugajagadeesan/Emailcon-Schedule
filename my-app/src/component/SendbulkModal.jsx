@@ -79,7 +79,7 @@ const handleSend = async () => {
             subject:message,
             previewtext,
             previewContent,bgColor,
-            scheduledTime:"no schedule",
+            scheduledTime:new Date().toLocaleString(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,
