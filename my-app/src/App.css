@@ -6,3 +6,8 @@
     align-items: center;
     /* Vertically center */
 }
+/* General Styles */
+* {
+    font-family: 'poppins', sans-serif;
+
+}

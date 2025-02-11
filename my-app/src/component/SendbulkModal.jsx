@@ -12,6 +12,7 @@ const SendbulkModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [previewtext, setPreviewtext] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const campaign = JSON.parse(localStorage.getItem("campaign"));
   const navigate=useNavigate();
@@ -36,6 +37,69 @@ const SendbulkModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
         });
     }
   }, [isOpen,user]);
+
+  
+const sendscheduleBulk = async () => {
+
+   if (!selectedGroup || !message || !previewtext) {
+    toast.warning("Please select a group and enter a message and preview text.");
+    return;
+  }
+
+  if (!previewContent || previewContent.length === 0) {
+    toast.warning("No preview content available.");
+    return;
+  }
+  if (!scheduledTime) {
+        toast.error("Please Select Date And Time");
+        return;
+    }
+
+ 
+
+  try {
+    // Fetch students from the selected group
+    const studentsResponse = await axios.get(
+      `${apiConfig.baseURL}/api/stud/groups/${selectedGroup}/students`
+    );
+    const students = studentsResponse.data;
+
+    if (students.length === 0) {
+      toast.warning("No students found in the selected group.");
+      setIsProcessing(false);
+      return;
+    }
+    
+        // Store initial campaign history with "Pending" status
+        const campaignHistoryData = {
+            campaignname: campaign.camname,
+            groupname: groups.find(group => group._id === selectedGroup)?.name, // Get the group name from the groups array
+            totalcount:students.length,
+            recipients:"no mail",
+            sendcount: 0,
+            failedcount: 0,
+            failedEmails:0,
+            sentEmails:0,
+            subject:message,
+            exceldata:[{}],
+            previewtext,
+            previewContent,bgColor,
+            scheduledTime:new Date().toLocaleString(),
+            status: "Scheduled On",
+            senddate: new Date().toLocaleString(),
+            user: user.id,
+            groupId:selectedGroup,
+        };
+
+        const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
+        console.log("Initial Campaign History Saved:", campaignResponse.data);
+        navigate("/home");
+      }
+      catch (error) {
+        console.error("Error scheduling email:", error);
+        toast.error("Failed to schedule email.");
+    } 
+  }
 
 const handleSend = async () => {
      setIsProcessing(true);
@@ -77,6 +141,7 @@ const handleSend = async () => {
             failedEmails:0,
             sentEmails:0,
             subject:message,
+            exceldata:[{}],
             previewtext,
             previewContent,bgColor,
             scheduledTime:new Date().toLocaleString(),
@@ -182,13 +247,23 @@ const handleSend = async () => {
             onChange={(e) => setPreviewtext(e.target.value)}
             placeholder="Enter your Previewtext here"
           />
+          <label htmlFor="message-input">Set Schedule Time:</label>
+           <input
+        type="datetime-local"
+        value={scheduledTime}
+        onChange={(e) =>setScheduledTime(e.target.value)}/>
+        <div className="action-btn">
           <button
             className="send-modal-submit-btn"
             onClick={handleSend}
             disabled={isProcessing}
           >
-            {isProcessing ? "Processing..." : "Send Mail"}
+            {isProcessing ? "Processing..." : "Send Now"}
           </button>
+          <button onClick={sendscheduleBulk} className="send-modal-submit-btn" >
+                Scheduled
+      </button>
+      </div>
         </div>
       </div>
 <ToastContainer className="custom-toast"

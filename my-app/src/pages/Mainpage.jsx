@@ -43,7 +43,7 @@ const Mainpage = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const modalRef = useRef(null);
-  const [scheduledMessage, setScheduledMessage] = useState("");
+  // const [scheduledMessage, setScheduledMessage] = useState("");
 
 
   const handlebackcampaign = () => {
@@ -366,23 +366,23 @@ const Mainpage = () => {
 
   //Schedule send Email
 const sendscheduleEmail = async () => {
- const scheduleTime = new Date(emailData.scheduledTime);
-const currentTime = new Date();
-const delay = scheduleTime.getTime() - currentTime.getTime();
+//  const scheduleTime = new Date(emailData.scheduledTime);
+// const currentTime = new Date();
+// const delay = scheduleTime.getTime() - currentTime.getTime();
 
-if (delay > 0) {
-    const formattedScheduleTime = scheduleTime.toUTCString(); // Ensure correct format
-    setScheduledMessage(`Email scheduled for ${formattedScheduleTime}`);
-} else {
-    setScheduledMessage("Please select a future date and time.");
-}
+// if (delay > 0) {
+//     const formattedScheduleTime = scheduleTime.toUTCString(); // Ensure correct format
+//     setScheduledMessage(`Email scheduled for ${formattedScheduleTime}`);
+// } else {
+//     setScheduledMessage("Please select a future date and time.");
+// }
 
 // Validate required fields
 if (!previewContent || previewContent.length === 0) {
     toast.warning("No preview content available.");
     return;
 }
-if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previewtext) {
+if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previewtext || !emailData.scheduledTime) {
     toast.warning("Please fill in all required fields.");
     return;
 }
@@ -404,6 +404,7 @@ try {
         previewtext: emailData.previewtext,
         previewContent,
         bgColor,
+        exceldata:[{}],
         status: "Scheduled On",
         scheduledTime: new Date(emailData.scheduledTime).toISOString(),  
         senddate: new Date().toLocaleString(),
@@ -460,6 +461,7 @@ const sendEmail = async () => {
             subject:emailData.subject,
             previewtext:emailData.previewtext,
             previewContent,bgColor,
+            exceldata:[{}],
             scheduledTime:"no schedule",
             status: "Pending",
             senddate: new Date().toLocaleString(),
@@ -1810,18 +1812,18 @@ const sendEmail = async () => {
         }
       />
 
-      {scheduledMessage && <p className="scheduled-message">{scheduledMessage}</p>}
+      {/* {scheduledMessage && <p className="scheduled-message">{scheduledMessage}</p>} */}
 
               <button
                 onClick={sendEmail}
                 className="modal-button"
                 disabled={isLoading}
               >
-                {isLoading ? "Processing..." : "Send"}
+                {isLoading ? "Processing..." : "Send Now"}
               </button>
                <button onClick={sendscheduleEmail} className="modal-button" disabled={isLoading}>
                 {isLoading ? "Processing..." : "Scheduled"}
-      </button>
+               </button>
               <button
                 onClick={() => setModalOpen(false)}
                 className="modal-button"

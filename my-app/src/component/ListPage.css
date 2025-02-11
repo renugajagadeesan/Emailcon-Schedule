@@ -90,7 +90,7 @@
 }
 
 .btn {
-    background-color: #007c89;
+    background-color: #2f327d;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -103,10 +103,10 @@
 }
 
 .btn:hover {
-    background-color: #007c89;
+    background-color: #292b74;
 }
 .btn-ref {
-    background-color: #007c89;
+    background-color: #2f327d;
     color: white;
     border: none;
     padding: 8px 5px;
@@ -116,7 +116,7 @@
 }
 
 .btn-ref:hover {
-    background-color: #007c89;
+    background-color: #282a74;
 }
 
 /* Close Button Styling */
@@ -206,7 +206,7 @@ select {
     top: 10px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #007c89;
+    background-color: #2f327d;
     color: #fff;
     padding: 10px 20px;
     border-radius: 5px;

@@ -49,27 +49,32 @@
 }
 
 .send-modal-form select,
-.send-modal-form textarea {
+.send-modal-form textarea,
+.send-modal-form input {
     margin-bottom: 15px;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
     border-radius: 4px;
+}
+.action-btn{
+    display: flex;
+    gap: 10px;
 }
 
 .send-modal-submit-btn {
-    background-color: #007c89;
+    background-color: #2f327d;
     color: #fff;
     border: none;
-    padding: 10px;
+    padding: 8px;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     transition: background 0.3s;
 }
 
 .send-modal-submit-btn:hover {
-    background-color: #007c89;
+    background-color: #26286e;
 }
 
 @media (max-width: 768px) {

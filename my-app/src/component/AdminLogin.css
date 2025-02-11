@@ -1,61 +1,50 @@
 /* General Styles */
 .admin-login-page {
-    font-family: 'Poppins', sans-serif;
-    /* background: linear-gradient(135deg, #6a11cb, #2575fc); */
-    height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+     justify-content: center;
+     align-items: center;
     margin: 0;
+    padding: 0;
     background-color: #f2fbfc;
-
 }
 
 .admin-cover {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 100vh !important;
     background: #fff;
-    width: 70%;
-    border-radius: 15px;
-    height: 510px;
-    animation: slideDown 0.6s ease-in-out;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    width: 100%;
 }
 
 .admin-aside {
     /* background: linear-gradient(135deg, #6a11cb, #2575fc); */
-    background-color: #007c89;
+    background-color: #faeedf;
     display: block;
-    color: white;
     width: 55%;
-    height: 100%;
     /* padding: 50px 0px; */
     align-content: center;
     text-align: center;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
-    border-top-right-radius: 100px;
-    border-bottom-right-radius: 100px;
 }
-.admin-aside h2{
-    color:white !important;
-}
+
 .admin-login-container {
+    padding-top:10% !important;
     background: #fff;
     width: 45%;
     padding: 2rem;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
 }
-
 
 .admin-login-header {
     text-align: center;
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 2rem;
-    color: #007c89;
+    color: #2f327d;
+}
+
+.lab {
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: 300;
+    color: #616161 !important;
 }
 
 /* Input Styles */
@@ -78,52 +67,36 @@
 
 /* Button Styles */
 .admin-login-button {
-    width: 80%;
-    padding: 0.9rem;
-    border: none;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    cursor: pointer;
-    background: #007c89;
-    margin-top: 1rem;
-    transition: background 0.3s ease, transform 0.2s ease;
+       padding:8px 40px;
+       border: none;
+       border-radius: 20px;
+       font-size: 16px;
+       font-weight: 500;
+       cursor: pointer;
+       margin: 10px 0px;
+       transition: background 0.3s ease;
 }
 
-.admin-login-button-2 {
-    width: 80%;
-    padding: 0.9rem;
-    border: none;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #fff;
-    cursor: pointer;
-    margin-top: 10px;
-    background: #007c89;
-    transition: background 0.3s ease, transform 0.2s ease;
-}
 
-.admin-login-button:hover,
+/* .admin-login-button:hover,
 .admin-login-button-2:hover {
     background: #007c89;
     transform: translateY(-2px);
-}
-
-.admin-login-button:active,
-.admin-login-button-2:active {
-    transform: translateY(0);
-}
+} */
 
 .Admin-submit {
     display: flex;
-    justify-content: center;
+    justify-content: center
 }
 
-.Admin-login {
-    display: flex;
-    justify-content: center;
+.Admin-submit button{
+    background: #ffa734;
+    color: #fff;
+}
+
+.Admin-submit button:hover {
+    background: #f48c06;
+
 }
 
 /* Responsive Design */
@@ -172,20 +145,16 @@
     position: relative;
     /* margin-bottom: 20px; */
     width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
+    padding: 0.6rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #c0bfbf !important;
     border-radius: 4px;
-    font-size: 1rem;
     box-sizing: border-box;
     outline: none;
     transition: border-color 0.3s;
 }
 
-.input-container:focus {
-    border-color: #2575fc;
-    box-shadow: 0 0 5px rgba(37, 117, 252, 0.3);
-}
+
 
 .input-icon {
     position: absolute;
@@ -197,10 +166,11 @@
 }
 
 .admin-login-input {
- width: 80% !important;
- padding: 5px 20px !important;
- border-radius: 5px !important;
- border: none !important;
- outline: none !important;
- margin: 0 !important;
+    width: 80% !important;
+    padding: 0px 5px !important;
+    border-radius: 5px !important;
+    border: none !important;
+    outline: none !important;
+    margin: 0 !important;
+    /* font-size: larger; */
 }

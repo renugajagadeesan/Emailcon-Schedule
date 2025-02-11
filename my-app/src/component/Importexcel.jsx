@@ -13,6 +13,7 @@ const ExcelModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
   const [fileName, setFileName] = useState('');
   const [message, setMessage] = useState("");
   const [previewtext, setPreviewtext] = useState("");
+    const [scheduledTime, setScheduledTime] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoading, setIsLoading] = useState(false); // State for loader
   const campaign = JSON.parse(localStorage.getItem("campaign"));
@@ -59,148 +60,220 @@ const handleFileUpload = (event) => {
   reader.readAsArrayBuffer(file);
 };
 
-const handleSend = async () => {
-      setIsLoading(true); // Show loader
-      navigate("/home")
+const sendscheduleExcel = async () => {
 
-  if (excelData.length === 0) {
-    toast.error("Please upload an Excel file first.");
-    return;
-  }
-
-if (excelData.length > 1) {
-      const headers = excelData[0]; // Assuming the first row contains the headers
-      const payload = excelData.slice(1).map((row) => {
-        const studentData = headers.reduce((obj, header, index) => {
-          obj[header] = row[index] || ""; // Map headers to corresponding row values
-          return obj;
-        }, {});
-        return studentData;
-      });
-
-      console.log("uploaded data", payload);
-      axios.post(`${apiConfig.baseURL}/api/stud/students/uploadexcel`, {payload, userId: user.id})
-      
-        .then((res) => {
-          console.log(res.data);
-          localStorage.setItem("excelstudent", JSON.stringify(res.data.excelstudent));
-          toast.success("Uploaded data saved successfully");        
-        })
-        .catch((error) => {
-          console.error("Error saving uploaded data:", error);
-          toast.error("Failed to save uploaded data");
-        });
-    } else {
-      toast.error("Ensure excel data is uploaded");
+    if (excelData.length === 0) {
+        toast.error("Please upload an Excel file first.");
+        return;
     }
-  const [headers, ...rows] = excelData;
-  if (!headers.includes("Email")) {
-    toast.error("Excel file must have an 'Email' column.");
-    return;
-  }
 
-  const emailIndex = headers.indexOf("Email");
+    if (excelData.length <= 1) {
+        toast.error("Ensure excel data is uploaded.");
+        return;
+    }
 
-  if (!previewContent || previewContent.length === 0) {
-    toast.error("No Preview Content provided.");
-    return;
-  }
+    const [headers, ...rows] = excelData;
+
+    if (!headers.includes("Email")) {
+        toast.error("Excel file must have an 'Email' column.");
+        return;
+    }
+
+    const emailIndex = headers.indexOf("Email");
+
+    if (!previewContent || previewContent.length === 0) {
+        toast.error("No Preview Content provided.");
+        return;
+    }
+    
     if (!previewtext) {
-    toast.error("Please Enter Previewtext.");
-    return;
-  }
+        toast.error("Please Enter Previewtext.");
+        return;
+    }
+     if (!scheduledTime) {
+        toast.error("Please Select Date And Time");
+        return;
+    }
+    
     if (!message) {
-    toast.error("Please Enter Subject");
-    return;
-  }
-
+        toast.error("Please Enter Subject.");
+        return;
+    }
 
     let sentEmails = [];
     let failedEmails = [];
 
+    // Convert Excel data into an array of objects
+    const formattedExcelData = rows.map(row => {
+        return headers.reduce((obj, header, index) => {
+            obj[header] = row[index] || "";
+            return obj;
+        }, {});
+    });
 
-  try {   
+    try {   
         // Store initial campaign history with "Pending" status
         const campaignHistoryData = {
             campaignname: campaign.camname,
-            groupname: "Instant Send" ,
+            groupname: "Instant Send",
             totalcount: rows.filter(row => row[emailIndex]).length, // Count non-empty emails
             sendcount: 0,
-            recipients:"no mail",
+            recipients: "no mail",
             failedcount: 0,
-            subject:message,
+            subject: message,
             previewtext,
-            previewContent,bgColor,
-            sentEmails,failedEmails,
-            scheduledTime:new Date().toLocaleString(),
+            previewContent,
+            bgColor,
+            sentEmails,
+            failedEmails,
+            scheduledTime: new Date(scheduledTime).toISOString(),  
+            status: "Scheduled On",
+            senddate: new Date().toLocaleString(),
+            user: user.id,
+            groupId: "No id",
+            exceldata: formattedExcelData, // Store Excel data inside campaign history
+        };
+
+        const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
+        console.log("Initial Campaign History Saved:", campaignResponse.data);
+        navigate("/home");
+      }
+      catch (error) {
+        console.error("Error scheduling email:", error);
+        toast.error("Failed to schedule email.");
+    } 
+  }
+
+const handleSend = async () => {
+    setIsLoading(true); // Show loader
+    navigate("/home");
+
+    if (excelData.length === 0) {
+        toast.error("Please upload an Excel file first.");
+        return;
+    }
+
+    if (excelData.length <= 1) {
+        toast.error("Ensure excel data is uploaded.");
+        return;
+    }
+
+    const [headers, ...rows] = excelData;
+
+    if (!headers.includes("Email")) {
+        toast.error("Excel file must have an 'Email' column.");
+        return;
+    }
+
+    const emailIndex = headers.indexOf("Email");
+
+    if (!previewContent || previewContent.length === 0) {
+        toast.error("No Preview Content provided.");
+        return;
+    }
+    
+    if (!previewtext) {
+        toast.error("Please Enter Previewtext.");
+        return;
+    }
+    
+    if (!message) {
+        toast.error("Please Enter Subject.");
+        return;
+    }
+
+    let sentEmails = [];
+    let failedEmails = [];
+
+    // Convert Excel data into an array of objects
+    const formattedExcelData = rows.map(row => {
+        return headers.reduce((obj, header, index) => {
+            obj[header] = row[index] || "";
+            return obj;
+        }, {});
+    });
+
+    try {   
+        // Store initial campaign history with "Pending" status
+        const campaignHistoryData = {
+            campaignname: campaign.camname,
+            groupname: "Instant Send",
+            totalcount: rows.filter(row => row[emailIndex]).length, // Count non-empty emails
+            sendcount: 0,
+            recipients: "no mail",
+            failedcount: 0,
+            subject: message,
+            previewtext,
+            previewContent,
+            bgColor,
+            sentEmails,
+            failedEmails,
+            scheduledTime: new Date().toLocaleString(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,
-            groupId:"No id",
+            groupId: "No id",
+            exceldata: formattedExcelData, // Store Excel data inside campaign history
         };
 
         const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
         const campaignId = campaignResponse.data.id; // Assume response includes campaign ID
         console.log("Initial Campaign History Saved:", campaignResponse.data);
 
+        // Process each row and send emails
+        for (const row of rows) {
+            const email = row[emailIndex];
+            if (!email) continue; // Skip if email is missing in the row
 
+            // Generate personalized content from template
+            const personalizedContent = previewContent.map(item => {
+                const personalizedItem = { ...item }; // Copy the structure
 
-    for (const row of rows) {
-      const email = row[emailIndex];
-      if (!email) continue; // Skip if email is missing in the row
+                if (item.content) {
+                    headers.forEach((header, index) => {
+                        const placeholder = new RegExp(`{?${header.trim()}\\}?`, "g"); // Match placeholders like {Fname}
+                        const cellValue = row[index] ? String(row[index]).trim() : ""; // Convert to string and trim
+                        personalizedItem.content = personalizedItem.content.replace(placeholder, cellValue);
+                    });
+                }
+                return personalizedItem;
+            });
 
-      // Generate personalized content from template
-      const personalizedContent = previewContent.map((item) => {
-        const personalizedItem = { ...item }; // Copy the structure
+            const emailData = {
+                recipientEmail: email,
+                subject: message,
+                body: JSON.stringify(personalizedContent),
+                bgColor,
+                previewtext,
+                userId: user.id,
+            };
 
-       if (item.content) {
-    headers.forEach((header, index) => {
-    const placeholder = new RegExp(`{?${header.trim()}\\}?`, 'g'); // Match both Lname and {Lname}
-    const cellValue = row[index] !== undefined && row[index] !== null ? String(row[index]).trim() : ''; // Convert to string and trim
-    personalizedItem.content = personalizedItem.content.replace(placeholder, cellValue);
-  });
-}
-        return personalizedItem;
-      });
+            try {
+                console.log("Sending email data:", emailData);
+                await axios.post(`${apiConfig.baseURL}/api/stud/sendbulkEmail`, emailData);
+                sentEmails.push(email);
+            } catch (error) {
+                console.error(`Failed to send email to ${email}:`, error);
+                failedEmails.push(email);
+            }
+        }
 
-          
-      const emailData = {
-        recipientEmail: email,
-        subject: message,
-        body: JSON.stringify(personalizedContent),
-        bgColor,
-        previewtext,
-        userId: user.id,
-      };
-
-      try {
-        console.log("Sending email data:", emailData);
-        await axios.post(`${apiConfig.baseURL}/api/stud/sendbulkEmail`, emailData);
-        sentEmails.push(email);
-      } catch (error) {
-        console.error(`Failed to send email to ${email}:`, error);
-        failedEmails.push(email);
-      }
-    }
- 
-      // Update campaign history with final status
+        // Update campaign history with final status
         const finalStatus = failedEmails.length > 0 ? "Failed" : "Success";
         await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`, {
             sendcount: sentEmails.length,
-            sentEmails:sentEmails,
-            failedEmails: failedEmails.length > 0 ? failedEmails : 0, // Ensure failedcount is 0, not an empty array          
-            failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
+            sentEmails,
+            failedEmails: failedEmails.length > 0 ? failedEmails : [],
+            failedcount: failedEmails.length,
             status: finalStatus,
         });
 
-
-    toast.success("Emails sent successfully!");
-   
-  } catch (error) {
-    console.error("Error sending emails:", error.response?.data || error.message);
-    setIsLoading(false);
-    toast.error("Failed to send emails. Check the console for details.");
-  }
+        toast.success("Emails sent successfully!");
+    } catch (error) {
+        console.error("Error sending emails:", error.response?.data || error.message);
+        setIsLoading(false);
+        toast.error("Failed to send emails. Check the console for details.");
+    }
 };
 
 
@@ -271,9 +344,18 @@ if (!isOpen) return null;
             </table>
           </div>
         )}
+        <h4>Set Scheduled Time</h4>
+        <input
+        type="datetime-local"
+        value={scheduledTime}
+        onChange={(e) =>setScheduledTime(e.target.value)}/>
+
         <button className="excel-modal-send-btn" onClick={handleSend} disabled={isLoading}>
-          {isLoading ? "Processing..." : "Send Mail"}
+          {isLoading ? "Processing..." : "Send Now"}
         </button>
+             <button onClick={sendscheduleExcel} className="excel-modal-send-btn" >
+                Scheduled
+      </button>
       </div>
 <ToastContainer className="custom-toast"
   position="bottom-center"

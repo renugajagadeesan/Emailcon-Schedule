@@ -15,6 +15,9 @@ import ListPage from './ListPage.jsx';
 import { FaRegClipboard } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa";
+import { FaUserCircle} from "react-icons/fa";
+import {MdWavingHand} from "react-icons/md";
+import imghome from "../Images/home-sidebar.jpg";
 
 const Home = () => {
   const [view, setView] = useState("main");
@@ -25,8 +28,7 @@ const [showfileGroupModal, setShowfileGroupModal] = useState(false);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
     const [showListPageModal, setShowListPageModal] = useState(false);
        const [showPopup, setShowPopup] = useState(false);
-
-
+         const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const navigate=useNavigate();
  const user = JSON.parse(localStorage.getItem("user"));
@@ -88,6 +90,7 @@ useEffect(() => {
    setShowfileGroupModal(true);
   };
 
+
   const handleCreateButton = () => {
   if (!user || !user.id) {
     toast.error("Please ensure the user is valid");
@@ -121,12 +124,17 @@ const handlecampaignhistory=()=>{
     navigate('/campaigntable')
 }
 
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
     <div className="sidebar-container">
       {/* Sidebar */}
       <div className="sidebar">
+        <div>
         <h2 className="sidebar-title" onClick={handleMainView}>
-          EmailCon
+          Email<span style={{ color: "#f48c06" }}>Con</span>
         </h2>
         <button
           className="sidebar-button campaign-button"
@@ -140,152 +148,180 @@ const handlecampaignhistory=()=>{
         >
           Contact
         </button>
-        <button onClick={handleLogout} className="logout-content">
-          <span className="text-log">Logout</span>{" "}
-          <span className="icon-log">
-            <FaSignOutAlt />
-          </span>
-        </button>
-        {/* <div>
-            <img src="../"/>
-        </div> */}
+        </div>
+        <div className='side-img'>
+        <img src={imghome} alt="Home img" className="home-image"/>
+        </div>
       </div>
 
       {/* Main Content */}
+
       <div className="main-content">
-        {view === "main" && (
-          <div className="card-grid">
-            <div className="cards" onClick={handleCampaignView}>
-              <FaRegClipboard className="icons campaign-icon" />
-              <span className="card-texts">Campaign</span>
-            </div>
-            <div className="cards" onClick={handleContactView}>
-              <FaAddressBook className="icons contact-icon" />
-              <span className="card-texts">Contact</span>
+        <nav className="navbars">
+          <div className="nav-split">
+            <h4>
+              <span
+                style={{ transform: "scaleX(-1)", display: "inline-block",color:"#f48c06",marginRight:"5px" }}
+              >
+                <MdWavingHand size={17} />
+              </span>{" "}
+              Hey <span style={{ color: "#f48c06" }}>{user.username}</span>
+            </h4>
+            <div className="profile-container">
+              <button onClick={toggleDropdown} className="profile-button">
+                <FaUserCircle className="profile-icon" />
+              </button>
+              {dropdownOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={handleLogout} className="dropdown-item">
+                    <span>Logout </span>
+                    <span>
+                      <FaSignOutAlt
+                        color="#f48c06"
+                        fontSize="15px"
+                      />
+                    </span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </nav>
+        <div className="maincontent-main">
+          {view === "main" && (
+            <div className="card-grid">
+              <div className="cards" onClick={handleCampaignView}>
+                <FaRegClipboard className="icons campaign-icon" />
+                <span className="card-texts">Campaign</span>
+              </div>
+              <div className="cards" onClick={handleContactView}>
+                <FaAddressBook className="icons contact-icon" />
+                <span className="card-texts">Contact</span>
+              </div>
+            </div>
+          )}
 
-        {view === "campaign" && (
-          <div className="card-grid">
-            <div className="cards" onClick={handleCreateCampaign}>
-              <FaFileAlt className="icons campaign-create-icon" />
-              <span className="card-texts">Create Campaign</span>
+          {view === "campaign" && (
+            <div className="card-grid">
+              <div className="cards" onClick={handleCreateCampaign}>
+                <FaFileAlt className="icons campaign-create-icon" />
+                <span className="card-texts">Create Campaign</span>
+              </div>
+              <div className="cards" onClick={handlecampaignhistory}>
+                <FaHistory className="icons campaign-history-icon" />
+                <span className="card-texts">Campaign History</span>
+              </div>
             </div>
-            <div className="cards" onClick={handlecampaignhistory}>
-              <FaHistory className="icons campaign-history-icon" />
-              <span className="card-texts">Campaign History</span>
-            </div>
-          </div>
-        )}
+          )}
 
-        {view === "contact" && (
-          <div className="card-grid">
-            <div className="cards" onClick={handleCreateContactView}>
-              <FaUserPlus className="icons contact-create-icon" />
-              <span className="card-texts">Create Contact</span>
+          {view === "contact" && (
+            <div className="card-grid">
+              <div className="cards" onClick={handleCreateContactView}>
+                <FaUserPlus className="icons contact-create-icon" />
+                <span className="card-texts">Create Contact</span>
+              </div>
+              <div className="cards" onClick={handleviewcontacts}>
+                <FaEye className="icons contact-view-icon" />
+                <span className="card-texts">View Contact </span>
+              </div>
             </div>
-            <div className="cards" onClick={handleviewcontacts}>
-              <FaEye className="icons contact-view-icon" />
-              <span className="card-texts">View Contact </span>
+          )}
+          {view === "create-contact" && (
+            <div className="card-grid">
+              <div className="cards" onClick={() => setShowNewGroupModal(true)}>
+                <FaUserPlus className="icons contact-create-icon" />
+                <span className="card-texts">New Group</span>
+              </div>
+              <div className="cards" onClick={handleAddContent}>
+                <FaUser className="icons contact-view-icon" />
+                <span className="card-texts">Existing Group</span>
+              </div>
+            </div>
+          )}
+          {/* setShowGroupModal(true) */}
+          {view === "add-contact" && (
+            <div className="card-grid">
+              <div className="cards" onClick={handleaddSinglecontacts}>
+                <FaUser className="icons contact-create-icon" />
+                <span className="card-texts">Add Single</span>
+              </div>
+              <div className="cards" onClick={handleaddfilecontacts}>
+                <FaUsers className="icons contact-view-icon" />
+                <span className="card-texts">Add Bulk</span>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Show group existing modal    */}
+        {showsingleGroupModal && (
+          <GroupsingleModal onClose={() => setShowsingleGroupModal(false)} />
+        )}
+        {/* Show group existing modal    */}
+        {showfileGroupModal && (
+          <GroupfileModal onClose={() => setShowfileGroupModal(false)} />
+        )}
+        {/* Show new group modal    */}
+        {showNewGroupModal && (
+          <GroupModalnew onClose={() => setShowNewGroupModal(false)} />
+        )}
+        {/* show group list */}
+        {showListPageModal && (
+          <ListPage onClose={() => setShowListPageModal(false)} />
+        )}
+        {/* welcome popup */}
+        {showPopup && (
+          <div className="home-overlay overlay">
+            <div className="home-modal">
+              <button className="home-close-button" onClick={closePopup}>
+                ✕
+              </button>
+              <h2>Welcome to Emailcon {user.username}!</h2>
+              <p>Explore the features and manage your groups efficiently.</p>
             </div>
           </div>
         )}
-        {view === "create-contact" && (
-          <div className="card-grid">
-            <div className="cards" onClick={() => setShowNewGroupModal(true)}>
-              <FaUserPlus className="icons contact-create-icon" />
-              <span className="card-texts">New Group</span>
-            </div>
-            <div className="cards" onClick={handleAddContent}>
-              <FaUser className="icons contact-view-icon" />
-              <span className="card-texts">Existing Group</span>
+        {/* Modal for Creating Campaign */}
+        {showCampaignModal && (
+          <div className="campaign-modal-overlay">
+            <div className="campaign-modal-content">
+              <h3>Create Campaign</h3>
+              <input
+                type="text"
+                value={campaignName}
+                onChange={(e) => setCampaignName(e.target.value)}
+                placeholder="Enter Campaign Name"
+                className="modal-input"
+              />
+              <button
+                className="modal-create-button"
+                onClick={handleCreateButton}
+              >
+                Create
+              </button>
+              <button
+                onClick={() => setShowCampaignModal(false)}
+                className="modal-create-button"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         )}
-        {/* setShowGroupModal(true) */}
-        {view === "add-contact" && (
-          <div className="card-grid">
-            <div className="cards" onClick={handleaddSinglecontacts}>
-              <FaUser className="icons contact-create-icon" />
-              <span className="card-texts">Add Single</span>
-            </div>
-            <div className="cards" onClick={handleaddfilecontacts}>
-              <FaUsers className="icons contact-view-icon" />
-              <span className="card-texts">Add Bulk</span>
-            </div>
-          </div>
-        )}
+        <SendbulkModal campaignName={campaignName} />
+
+        <ToastContainer
+          className="custom-toast"
+          position="bottom-center"
+          autoClose={2000}
+          hideProgressBar={true} // Disable progress bar
+          closeOnClick={false}
+          closeButton={false}
+          pauseOnHover={true}
+          draggable={true}
+          theme="light" // Optional: Choose theme ('light', 'dark', 'colored')
+        />
       </div>
-
-      {/* Show group existing modal    */}
-      {showsingleGroupModal && (
-        <GroupsingleModal onClose={() => setShowsingleGroupModal(false)} />
-      )}
-      {/* Show group existing modal    */}
-      {showfileGroupModal && (
-        <GroupfileModal onClose={() => setShowfileGroupModal(false)} />
-      )}
-      {/* Show new group modal    */}
-      {showNewGroupModal && (
-        <GroupModalnew onClose={() => setShowNewGroupModal(false)} />
-      )}
-      {/* show group list */}
-      {showListPageModal && (
-        <ListPage onClose={() => setShowListPageModal(false)} />
-      )}
-      {/* welcome popup */}
-      {showPopup && (
-        <div className="home-overlay overlay">
-          <div className="home-modal">
-            <button className="home-close-button" onClick={closePopup}>
-              ✕
-            </button>
-            <h2>Welcome to Emailcon {user.username}!</h2>
-            <p>Explore the features and manage your groups efficiently.</p>
-          </div>
-        </div>
-      )}
-      {/* Modal for Creating Campaign */}
-      {showCampaignModal && (
-        <div className="campaign-modal-overlay">
-          <div className="campaign-modal-content">
-            <h3>Create Campaign</h3>
-            <input
-              type="text"
-              value={campaignName}
-              onChange={(e) => setCampaignName(e.target.value)}
-              placeholder="Enter Campaign Name"
-              className="modal-input"
-            />
-            <button
-              className="modal-create-button"
-              onClick={handleCreateButton}
-            >
-              Create
-            </button>
-            <button
-              onClick={() => setShowCampaignModal(false)}
-              className="modal-create-button"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-      <SendbulkModal campaignName={campaignName} />
-
-      <ToastContainer
-        className="custom-toast"
-        position="bottom-center"
-        autoClose={2000}
-        hideProgressBar={true} // Disable progress bar
-        closeOnClick={false}
-        closeButton={false}
-        pauseOnHover={true}
-        draggable={true}
-        theme="light" // Optional: Choose theme ('light', 'dark', 'colored')
-      />
     </div>
   );
 };

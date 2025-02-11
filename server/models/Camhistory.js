@@ -62,10 +62,26 @@ const camhistorySchema = new mongoose.Schema({
     groupId: {
         type: String,
     },
+    exceldata: [{
+        Fname: String,
+        Lname: String,
+        Email: String,
+        EMIamount: Number,
+        Balance: Number,
+        Totalfees: Number,
+        Coursename: String,
+        Coursetype: String,
+        Offer: String,
+        Number: String,
+        Date: String,
+        additionalFields: {
+            type: Map,
+            of: String,
+        },
+    }],
 }, {
     timestamps: true, // Automatically stores createdAt and updatedAt
 });
 
 const Camhistory = mongoose.model("Camhistory", camhistorySchema);
-
 export default Camhistory;

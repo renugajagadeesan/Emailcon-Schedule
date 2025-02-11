@@ -14,7 +14,7 @@ function CampaignTable() {
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
-  const excelstudent = JSON.parse(localStorage.getItem("excelstudent"));
+  // const excelstudent = JSON.parse(localStorage.getItem("excelstudent"));
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTime, setNewTime] = useState("");
@@ -170,11 +170,6 @@ const handleToggle = async (e, campaignId) => {
     if (!campaign.groupId || campaign.groupId === "No id") {
       console.log("No group found, sending emails directly.");
 
-  
-    // If groupId exists, fetch students and follow existing logic
-    const studentsResponse = await axios.get(`${apiConfig.baseURL}/api/stud/uploadexcel/${excelstudent.id}/students`);
-    const students = studentsResponse.data;
-
     // Update status to 'Pending' before resending
     await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`, {
       status: "Pending",
@@ -182,7 +177,7 @@ const handleToggle = async (e, campaignId) => {
 
     for (const email of campaign.failedEmails) {
       // Find the corresponding student
-      const student = students.payload.find((s) => s.Email === email);
+      const student = campaign.exceldata.find((s) => s.Email === email);
       if (!student) {
         console.warn(`No matching student found for email: ${email}`);
         failedEmails.push(email);
@@ -453,6 +448,7 @@ const handleToggle = async (e, campaignId) => {
         <div className="modal-overlay-fail">
           <div className="modal-content-fail">
             <h3>Failed Emails</h3>
+            
             <div className="failedview">
               {failedEmails.map((email, index) => (
                 <p key={index}>{email}</p>
