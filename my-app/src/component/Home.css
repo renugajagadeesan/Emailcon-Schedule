@@ -376,7 +376,7 @@
 }
 
 .home-modal {
-    background: rgba(255, 255, 255, 0.15);
+    background:white;
     border-radius: 15px;
     padding: 20px;
     max-width: 400px;
@@ -395,7 +395,7 @@
     background: none;
     font-size: 18px;
     cursor: pointer;
-    color: white;
+    color:black;
 }
 
 .home-animation {
