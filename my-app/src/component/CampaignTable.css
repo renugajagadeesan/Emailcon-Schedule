@@ -198,3 +198,35 @@
     background: red;
     color: white;
 }
+
+.search-container {
+    display: flex;
+    align-items: center;
+    border-radius: 25px;
+    width: 300px;  
+    position: relative;
+}
+
+
+
+.search-icon {
+    position: absolute;
+    right: 20px;
+    color: #555;
+    font-size: 16px;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    /* background: transparent; */
+    font-size: 14px;
+    padding: 8px 5px !important;
+    /* Adjust padding to prevent overlap */
+    width: 100%;
+}
+
+.search-input::placeholder {
+    color: #999;
+    font-size: 14px;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./CampaignTable.css";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft,FaSearch  } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,12 +12,14 @@ function CampaignTable() {
   const [showModal, setShowModal] = useState(false);
   const [failedEmails, setFailedEmails] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   // const excelstudent = JSON.parse(localStorage.getItem("excelstudent"));
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newTime, setNewTime] = useState("");
+  const [newTime, setNewTime] = useState({});
+const [activeCampaignId, setActiveCampaignId] = useState(null); // To track active modal's campaignId
 
   // Store old scheduled times separately
 // const [oldScheduledTimes, setOldScheduledTimes] = useState({});
@@ -50,34 +52,49 @@ function CampaignTable() {
     setShowModal(true);
   };
 
-  
-  const handleSaveTime = async (campaignId) => {
-  if (!newTime) {
+
+const handleOpenModal = (campaignId, scheduledTime) => {
+  console.log("Opening modal for campaign:", campaignId, "Scheduled Time:", scheduledTime);
+  setNewTime((prev) => ({ ...prev, [campaignId]: scheduledTime || "" })); // Ensure campaign-specific time
+  setActiveCampaignId(campaignId); // Track the active campaign's modal
+  setIsModalOpen(true); // Open the modal
+};
+
+const handleTimeChange = (e, campaignId) => {
+  const selectedTime = e.target.value;
+  console.log("Selected Time:", selectedTime,campaignId);
+  setNewTime((prev) => ({ ...prev, [campaignId]: selectedTime })); // Store per campaign
+};
+const handleSaveTime = async () => {
+  if (!newTime[activeCampaignId]) {
     toast.error("Please select a valid time");
     return;
   }
-console.log("Scheduled time being sent:", new Date(newTime).toISOString());
 
   try {
-    await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`, {
-      scheduledTime: new Date(newTime).toISOString(),
+    const updatedTimeISO = new Date(newTime[activeCampaignId]).toISOString(); // Convert to ISO format
+
+    console.log("Updating campaign:", activeCampaignId, "with new time:", updatedTimeISO);
+
+    await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${activeCampaignId}`, {
+      scheduledTime: updatedTimeISO,
     });
 
+    // ✅ Update the local state so that the UI reflects the change
+    setCampaigns((prevCampaigns) =>
+      prevCampaigns.map((c) =>
+        c._id === activeCampaignId ? { ...c, scheduledTime: updatedTimeISO } : c
+      )
+    );
+
     toast.success("Scheduled time updated successfully!");
-    setIsModalOpen(false); // Close modal after update
-
-
-
+    setIsModalOpen(false); // Close modal after save
+    setActiveCampaignId(null); // Clear active campaign
   } catch (error) {
     console.error("Error updating scheduled time:", error);
     toast.error("Failed to update scheduled time");
   }
 };
-
-
-  const handleTimeChange = (e) => {
-    setNewTime(e.target.value);
-  };
 
 const handleToggle = async (e, campaignId) => {
   const isChecked = e.target.checked; // Get toggle state
@@ -302,18 +319,38 @@ const handleToggle = async (e, campaignId) => {
     setIsProcessing(false);
   }
 };
+ const filteredCampaigns = campaigns.filter((campaign) =>
+    Object.values(campaign)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
 
 
   return (
     <div className="admin-dashboard-page">
-      <div className="admin-nav">
-        <h2 className="admin-dashboard-header">Campaign History</h2>
-        <button onClick={handleBackCampaign} className="admin-nav-button">
-          <span className="admin-nav-icons">
-            <FaArrowLeft />
-          </span>{" "}
-          <span className="nav-names">Home</span>
-        </button>
+       <div className="admin-nav">
+        <div>
+          <h2 className="admin-dashboard-header">Campaign History</h2>
+        </div>
+          <div className="search-container">
+            <FaSearch className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search campaigns..."
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div>
+            <button onClick={handleBackCampaign} className="admin-nav-button">
+              <span className="admin-nav-icons">
+                <FaArrowLeft />
+              </span>
+              <span className="nav-names">Home</span>
+            </button>
+          </div>
       </div>
 <div className="cam-scroll">
       <table className="cam-dashboard-table">
@@ -330,8 +367,9 @@ const handleToggle = async (e, campaignId) => {
           </tr>
         </thead>
         <tbody>
+          
           {campaigns.length > 0 ? (
-            campaigns.map((campaign) => (
+         filteredCampaigns.map((campaign) => (
               <tr key={campaign._id}>
                 <td>{campaign.senddate}</td>
                 <td>{campaign.campaignname}</td>
@@ -350,37 +388,37 @@ const handleToggle = async (e, campaignId) => {
                     campaign.failedcount
                   )}
                 </td>
-  <>
       {/* Click on time to open modal */}
-      <td
-        title="Edit"
-        style={{ cursor: "pointer", textDecoration: "underline" }}
-        onClick={(e) => {
-          e.stopPropagation(); // Prevents immediate closing
-          setIsModalOpen(true);
-        }}
-      >
-        {new Date(campaign.scheduledTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-      </td>
+   <td
+  title="Edit"
+  style={{ cursor: "pointer", textDecoration: "underline" }}
+  onClick={(e) => {
+    e.stopPropagation(); // Prevents immediate closing
+    handleOpenModal(campaign._id, campaign.scheduledTime); // Pass scheduledTime
+  }}
+>
+  {/* Modal */}
+{isModalOpen && activeCampaignId && (
+  <div className="modal-schedule" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-content-schedule" onClick={(e) => e.stopPropagation()}>
+      <h3>Edit Scheduled Time</h3>
+      <input 
+        type="datetime-local" 
+        value={newTime[activeCampaignId] || ""} 
+        onChange={(e) => handleTimeChange(e, activeCampaignId)}
+      />
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="modal-schedule" onClick={() => setIsModalOpen(false)}>
-          <div className="modal-content-schedule" onClick={(e) => e.stopPropagation()}>
-            <h3>Edit Scheduled Time</h3>
-            <input
-              type="datetime-local"
-              value={newTime}
-              onChange={handleTimeChange}
-            />
-            <div className="modal-actions-schedule">
-              <button onClick={()=>handleSaveTime(campaign._id)}>Save</button>
-              <button onClick={() => setIsModalOpen(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      <div className="modal-actions-schedule">
+        <button onClick={handleSaveTime}>Save</button> 
+        <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
+
+  {new Date(campaign.scheduledTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+</td>
+    
      <td
   style={{
     display: "flex",

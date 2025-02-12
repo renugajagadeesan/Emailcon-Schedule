@@ -14,9 +14,12 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Start loading
     try {
       const res = await axios.post(
         `${apiConfig.baseURL}/api/auth/login`,
@@ -31,6 +34,9 @@ function Login() {
       navigate("/home");
     } catch (error) {
       toast.error(error.response.data || "Error logging in");
+    }
+    finally {
+      setIsLoading(false); // Stop loading
     }
   };
 
@@ -90,8 +96,16 @@ function Login() {
               />
             </div>
             <div className="log-btn">
-              <button type="submit" className="login-button login-submit">
-                Login
+              <button
+                type="submit"
+                className="login-button login-submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span className="loader-login"></span> // Spinner
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
             <div className="log-sign">

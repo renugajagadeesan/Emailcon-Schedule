@@ -57,7 +57,7 @@ function AdminDashboard() {
         <button onClick={handleLogout} className="admin-nav-button">
             <span className="admin-nav-icons">
               <FaSignOutAlt />
-            </span>{" "}
+            </span>
             <span className="nav-names">Logout</span>
           </button>
           </div>

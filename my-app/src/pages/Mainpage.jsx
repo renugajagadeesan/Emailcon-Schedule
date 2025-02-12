@@ -581,7 +581,9 @@ const sendEmail = async () => {
     <div>
       <nav className="navbar">
         <div>
-          <h3 className="company-name">{campaign.camname} Campaign</h3>
+          <h3 className="company-name">
+            <span style={{ color: "#2f327D" }}>{campaign.camname}</span> <span style={{ color: "#f48c06" }}>Campaign</span>
+          </h3>
         </div>
         <div>
           <button

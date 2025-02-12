@@ -84,7 +84,7 @@ const sendscheduleBulk = async () => {
             exceldata:[{}],
             previewtext,
             previewContent,bgColor,
-            scheduledTime:new Date().toLocaleString(),
+            scheduledTime: new Date(scheduledTime).toISOString(),  
             status: "Scheduled On",
             senddate: new Date().toLocaleString(),
             user: user.id,

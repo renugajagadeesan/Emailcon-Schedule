@@ -28,9 +28,16 @@
      padding: 20px 10px;
      margin:0px;
 }
+.admin-nav-icons{
+    padding-top: 4px !important;
+}
 
 .admin-nav-button {
     background-color:#2f327d;
+    display: flex;
+    gap: 5px;
+    align-items: center !important;
+    justify-content: center !important;
     color: white;
     border: none !important;
     outline: none !important;
