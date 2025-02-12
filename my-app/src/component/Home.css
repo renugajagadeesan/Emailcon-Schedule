@@ -11,7 +11,7 @@
     width: 18%;
     background-color: #fff;
     color: #fff;
-    padding: 20px;
+    padding: 10px 20px;
     /* position: fixed;
     top: 0;
     left: 0; */
@@ -20,7 +20,7 @@
 }
 
 .sidebar-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     margin-bottom: 20px;
     text-align: center;
     color: #2f327d;
@@ -285,6 +285,8 @@
     top: -2%;
     right: 5%;
     font-size: 1.2rem;
+    font-weight: 400;
+    
 }
 
 .profile-button {

@@ -50,11 +50,12 @@
     margin:20px auto;
     background: #ffffff;
     border-radius: 8px;
-    overflow: auto;
-    overflow-y: scroll;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
-
+.admin-scroll {
+    height: 550px !important;
+    overflow: auto;
+}
 .admin-dashboard-table th {
     text-align: center;
     padding: 1rem;

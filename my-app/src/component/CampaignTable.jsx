@@ -315,8 +315,8 @@ const handleToggle = async (e, campaignId) => {
           <span className="nav-names">Home</span>
         </button>
       </div>
-
-      <table className="admin-dashboard-table">
+<div className="cam-scroll">
+      <table className="cam-dashboard-table">
         <thead>
           <tr>
             <th>Send Date</th>
@@ -344,7 +344,7 @@ const handleToggle = async (e, campaignId) => {
                       className="view-btn"
                       onClick={() => handleViewFailedEmails(campaign.failedEmails)}
                     >
-                      View
+                      View-{campaign.failedcount}
                     </button>
                   ) : (
                     campaign.failedcount
@@ -417,8 +417,6 @@ const handleToggle = async (e, campaignId) => {
     </button>
   )}
 </td>
-
-
               </tr>
             ))
           ) : (
@@ -430,7 +428,7 @@ const handleToggle = async (e, campaignId) => {
           )}
         </tbody>
       </table>
-
+</div>
       <ToastContainer
         className="custom-toast"
         position="bottom-center"

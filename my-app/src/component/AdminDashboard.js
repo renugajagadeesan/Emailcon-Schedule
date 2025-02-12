@@ -62,7 +62,7 @@ function AdminDashboard() {
           </button>
           </div>
                 <h2 className="admin-dashboard-heading">Emailcon Signup Details</h2>
-
+<div className="admin-scroll">
       <table className="admin-dashboard-table">
         <thead>
           <tr>
@@ -102,6 +102,7 @@ function AdminDashboard() {
           ))}
         </tbody>
       </table>
+  </div>
 <ToastContainer className="custom-toast"
   position="bottom-center"
       autoClose= {3000} 

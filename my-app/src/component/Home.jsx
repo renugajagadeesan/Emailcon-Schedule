@@ -161,7 +161,7 @@ const handlecampaignhistory=()=>{
           <div className="nav-split">
             <h4>
               <span
-                style={{ transform: "scaleX(-1)", display: "inline-block",color:"#f48c06",marginRight:"5px" }}
+                style={{ transform: "scaleX(-1)", display: "inline-block",color:"gold",marginRight:"5px" }}
               >
                 <MdWavingHand size={17} />
               </span>{" "}
