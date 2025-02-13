@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
          for (const camhistory of camhistories) {
              console.log(`Processing scheduled email for user: ${camhistory.user}`);
-             const groupId = camhistory.groupId ? .trim(); // Trim to avoid spaces affecting checks
+             const groupId = camhistory.groupId?.trim(); // Trim to avoid spaces affecting checks
 
              // **First Condition**: If `groupId` is missing or "no group"
              if (!groupId || groupId.toLowerCase() === "no group") {
