@@ -388,36 +388,42 @@ const handleToggle = async (e, campaignId) => {
                     campaign.failedcount
                   )}
                 </td>
-      {/* Click on time to open modal */}
-   <td
-  title="Edit"
-  style={{ cursor: "pointer", textDecoration: "underline" }}
-  onClick={(e) => {
-    e.stopPropagation(); // Prevents immediate closing
-    handleOpenModal(campaign._id, campaign.scheduledTime); // Pass scheduledTime
-  }}
->
-  {/* Modal */}
-{isModalOpen && activeCampaignId && (
-  <div className="modal-schedule" onClick={(e) => e.stopPropagation()}>
-    <div className="modal-content-schedule" onClick={(e) => e.stopPropagation()}>
-      <h3>Edit Scheduled Time</h3>
-      <input 
-        type="datetime-local" 
-        value={newTime[activeCampaignId] || ""} 
-        onChange={(e) => handleTimeChange(e, activeCampaignId)}
-      />
+{(campaign.status === "Scheduled On" || campaign.status === "Scheduled Off") ? (
+  <td
+    title="Edit"
+    style={{ cursor: "pointer", textDecoration: "underline" }}
+    onClick={(e) => {
+      e.stopPropagation(); // Prevents immediate closing
+      handleOpenModal(campaign._id, campaign.scheduledTime); // Pass scheduledTime
+    }}
+  >
+    {/* Modal */}
+    {isModalOpen && activeCampaignId === campaign._id && (
+      <div className="modal-schedule" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content-schedule" onClick={(e) => e.stopPropagation()}>
+          <h3>Edit Scheduled Time</h3>
+          <input 
+            type="datetime-local" 
+            value={newTime[activeCampaignId] || ""} 
+            onChange={(e) => handleTimeChange(e, activeCampaignId)}
+          />
 
-      <div className="modal-actions-schedule">
-        <button onClick={handleSaveTime}>Save</button> 
-        <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+          <div className="modal-actions-schedule">
+            <button onClick={handleSaveTime}>Save</button> 
+            <button onClick={() => setIsModalOpen(false)}>Cancel</button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    )}
+
+    {new Date(campaign.scheduledTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+  </td>
+) : (
+  <td>
+    {new Date(campaign.scheduledTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
+  </td>
 )}
 
-  {new Date(campaign.scheduledTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
-</td>
     
      <td
   style={{
