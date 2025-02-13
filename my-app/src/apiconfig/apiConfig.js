@@ -1,6 +1,6 @@
 // src/apiConfig.js
 const apiConfig = {
-    baseURL: "https://emailcon-campaign-backend.vercel.app",
+    baseURL: "https://emailcon-campaign-backend.onrender.com",
 };
 
 export default apiConfig;
