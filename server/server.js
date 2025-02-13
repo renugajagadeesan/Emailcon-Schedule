@@ -6,6 +6,8 @@ import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import dotenv from 'dotenv';
 // import './cron-scheduler.js';
+import "./api/cron.js"; // Ensure this file runs when the backend starts
+
 import bodyParser from 'body-parser';
 
 // Load environment variables
