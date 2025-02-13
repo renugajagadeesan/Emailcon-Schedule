@@ -20,6 +20,7 @@ import apiConfig from "../apiconfig/apiConfig.js";
 
 const Mainpage = () => {
   const [isLoading, setIsLoading] = useState(false); // State for loader
+  const [isLoadingsch, setIsLoadingsch] = useState(false); // State for loader
   const [bgColor, setBgColor] = useState("#ffffff");
   const [isMobileView, setIsMobileView] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -35,7 +36,7 @@ const Mainpage = () => {
   const [redoStack, setRedoStack] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSendexcelModal, setShowSendexcelModal] = useState(false); // State for opening Sendexcelmail
-
+  const [isScheduled, setIsScheduled] = useState(false); // Toggle state
   const [showSendModal, setShowSendModal] = useState(false); // State for opening SendbulkModal
   const [previewContent, setPreviewContent] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -386,6 +387,8 @@ if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previ
     toast.warning("Please fill in all required fields.");
     return;
 }
+setIsLoadingsch(true);
+navigate("/home");
 
 try {
     let recipients = emailData.recipient.split(",").map(email => email.trim());
@@ -417,19 +420,17 @@ try {
         console.log("Initial Campaign History Saved:", campaignResponse.data);     
         localStorage.setItem("camhistory", JSON.stringify(campaignResponse.data));
         toast.success("Email scheduled successfully!");
-        navigate("/home");
    } catch (error) {
         console.error("Error scheduling email:", error);
         toast.error("Failed to schedule email.");
     } finally {
-        setIsLoading(false);
+        setIsLoadingsch(false);
     }
 };
 
 
   //Normal Send Email
 const sendEmail = async () => {
-    setIsLoading(true);
 
     // Validate required fields
     if (!previewContent || previewContent.length === 0) {
@@ -440,6 +441,9 @@ const sendEmail = async () => {
         toast.warning("Please fill in all required fields.");
         return;
     }
+        setIsLoading(true);
+        navigate("/home");
+
 
     try {
       
@@ -461,7 +465,7 @@ const sendEmail = async () => {
             previewtext:emailData.previewtext,
             previewContent,bgColor,
             exceldata:[{}],
-            scheduledTime:"no schedule",
+            scheduledTime:new Date(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,
@@ -509,7 +513,6 @@ const sendEmail = async () => {
         });
 
         toast.success("Email sending process completed.");
-            navigate("/home");
 
     } catch (error) {
         console.error("Error in sendEmail:", error);
@@ -1807,28 +1810,50 @@ const sendEmail = async () => {
                   setEmailData({ ...emailData, previewtext: e.target.value })
                 }
               />
-                    <input
+                   
+
+
+          {/* Toggle Button for Scheduled Mail */}
+          <div className="toggle-container">
+            
+            <span>{isScheduled ? "Scheduled Mail Enabled :" : "Scheduled Mail Disabled :"}</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isScheduled}
+                onChange={() => setIsScheduled(!isScheduled)}
+              />
+              <span className="slider-send round"></span>
+            </label>
+          </div>
+
+          {/* Show scheduled time input only if the toggle is enabled */}
+          {isScheduled && (
+            <div>
+              <label htmlFor="schedule-time">Set Schedule Time:</label>{" "}
+               <input
         type="datetime-local"
         value={emailData.scheduledTime}
         onChange={(e) =>
           setEmailData({ ...emailData, scheduledTime: e.target.value })
         }
       />
-
-      {/* {scheduledMessage && <p className="scheduled-message">{scheduledMessage}</p>} */}
-
+            </div>
+          )}
               <button
                 onClick={sendEmail}
                 className="modal-button"
-                disabled={isLoading}
+              disabled={isLoading || isScheduled} // Disable if scheduled is enabled
               >
                 {isLoading ? "Processing..." : "Send Now"}
               </button>
-               <button onClick={sendscheduleEmail} className="modal-button" disabled={isLoading}>
-                {isLoading ? "Processing..." : "Scheduled"}
+               <button onClick={sendscheduleEmail}
+                disabled={isLoadingsch || !isScheduled} // Disable if scheduled is not enabled
+                className="modal-button">
+                {isLoadingsch ? "Processing..." : "Scheduled"}
                </button>
               <button
-                onClick={() => setModalOpen(false)}
+                onClick={() => setModalOpen(false)}                
                 className="modal-button"
               >
                 Cancel

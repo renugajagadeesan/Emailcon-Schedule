@@ -12,10 +12,13 @@ const ExcelModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
   const [excelData, setExcelData] = useState([]);
   const [fileName, setFileName] = useState('');
   const [message, setMessage] = useState("");
+    const [isScheduled, setIsScheduled] = useState(false); // Toggle state
   const [previewtext, setPreviewtext] = useState("");
     const [scheduledTime, setScheduledTime] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const [isLoading, setIsLoading] = useState(false); // State for loader
+    const [isLoadingsch, setIsLoadingsch] = useState(false); // State for loader
+
   const campaign = JSON.parse(localStorage.getItem("campaign"));
   const navigate=useNavigate();
 
@@ -99,6 +102,8 @@ const sendscheduleExcel = async () => {
         toast.error("Please Enter Subject.");
         return;
     }
+      setIsLoadingsch(true); // Show loader
+      navigate("/home");
 
     let sentEmails = [];
     let failedEmails = [];
@@ -136,18 +141,18 @@ const sendscheduleExcel = async () => {
 
         const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
         console.log("Initial Campaign History Saved:", campaignResponse.data);
-        navigate("/home");
       }
       catch (error) {
         console.error("Error scheduling email:", error);
         toast.error("Failed to schedule email.");
     } 
+    finally{
+      setIsLoadingsch(false);
+    }
   }
 
 const handleSend = async () => {
-    setIsLoading(true); // Show loader
-    navigate("/home");
-
+  
     if (excelData.length === 0) {
         toast.error("Please upload an Excel file first.");
         return;
@@ -181,6 +186,8 @@ const handleSend = async () => {
         toast.error("Please Enter Subject.");
         return;
     }
+  setIsLoading(true); // Show loader
+    navigate("/home");
 
     let sentEmails = [];
     let failedEmails = [];
@@ -208,7 +215,7 @@ const handleSend = async () => {
             bgColor,
             sentEmails,
             failedEmails,
-            scheduledTime: new Date().toLocaleString(),
+            scheduledTime: new Date(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,
@@ -269,6 +276,7 @@ const handleSend = async () => {
         });
 
         toast.success("Emails sent successfully!");
+
     } catch (error) {
         console.error("Error sending emails:", error.response?.data || error.message);
         setIsLoading(false);
@@ -344,18 +352,48 @@ if (!isOpen) return null;
             </table>
           </div>
         )}
-        <h4>Set Scheduled Time</h4>
-        <input
-        type="datetime-local"
-        value={scheduledTime}
-        onChange={(e) =>setScheduledTime(e.target.value)}/>
+         {/* Toggle Button for Scheduled Mail */}
+          <div className="toggle-container">
+            
+            <span>{isScheduled ? "Scheduled Mail Enabled :" : "Scheduled Mail Disabled :"}</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isScheduled}
+                onChange={() => setIsScheduled(!isScheduled)}
+              />
+              <span className="slider-send round"></span>
+            </label>
+          </div>
+           {/* Show scheduled time input only if the toggle is enabled */}
+          {isScheduled && (
+            <div>
+              <label htmlFor="schedule-time">Set Schedule Time:</label><br />
+              <input
+                type="datetime-local"
+                id="schedule-time"
+                value={scheduledTime}
+                onChange={(e) => setScheduledTime(e.target.value)}
+              />
+            </div>
+          )}
 
-        <button className="excel-modal-send-btn" onClick={handleSend} disabled={isLoading}>
-          {isLoading ? "Processing..." : "Send Now"}
-        </button>
-             <button onClick={sendscheduleExcel} className="excel-modal-send-btn" >
-                Scheduled
-      </button>
+            <button
+              className="excel-modal-send-btn"
+              onClick={handleSend}
+              disabled={isLoading || isScheduled} // Disable if scheduled is enabled
+            >
+              {isLoading ? "Processing..." : "Send Now"}
+            </button>
+
+            <button
+              onClick={sendscheduleExcel}
+              className="excel-modal-send-btn"
+              disabled={isLoadingsch || !isScheduled} // Disable if scheduled is not enabled
+            >
+              {isLoadingsch ? "Processing..." : "Scheduled"}
+            </button>
+
       </div>
 <ToastContainer className="custom-toast"
   position="bottom-center"

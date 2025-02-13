@@ -11,6 +11,9 @@ const SendbulkModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+    const [isProcessingsch, setIsProcessingsch] = useState(false);
+
+  const [isScheduled, setIsScheduled] = useState(false); // Toggle state
   const [previewtext, setPreviewtext] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
@@ -55,7 +58,9 @@ const sendscheduleBulk = async () => {
         return;
     }
 
- 
+  setIsProcessingsch(true);
+          navigate("/home");
+
 
   try {
     // Fetch students from the selected group
@@ -66,7 +71,7 @@ const sendscheduleBulk = async () => {
 
     if (students.length === 0) {
       toast.warning("No students found in the selected group.");
-      setIsProcessing(false);
+      setIsProcessingsch(false);
       return;
     }
     
@@ -93,17 +98,17 @@ const sendscheduleBulk = async () => {
 
         const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
         console.log("Initial Campaign History Saved:", campaignResponse.data);
-        navigate("/home");
       }
       catch (error) {
         console.error("Error scheduling email:", error);
         toast.error("Failed to schedule email.");
     } 
+    finally{
+      setIsProcessingsch(false);
+    }
   }
 
 const handleSend = async () => {
-     setIsProcessing(true);
-     navigate("/home");
   if (!selectedGroup || !message || !previewtext) {
     toast.warning("Please select a group and enter a message and preview text.");
     return;
@@ -113,6 +118,10 @@ const handleSend = async () => {
     toast.warning("No preview content available.");
     return;
   }
+       setIsProcessing(true);
+           navigate("/home");
+
+
 
     let sentEmails = [];
     let failedEmails = [];
@@ -144,7 +153,7 @@ const handleSend = async () => {
             exceldata:[{}],
             previewtext,
             previewContent,bgColor,
-            scheduledTime:new Date().toLocaleString(),
+            scheduledTime:new Date(),
             status: "Pending",
             senddate: new Date().toLocaleString(),
             user: user.id,
@@ -233,37 +242,67 @@ const handleSend = async () => {
               </option>
             ))}
           </select>
-          <label htmlFor="message-input">Subject:</label>
+
+          <label htmlFor="subject-input">Subject:</label>
           <textarea
-            id="message-input"
+            id="subject-input"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Enter your message here"
           />
-           <label htmlFor="message-input">Preview Text:</label>
+
+          <label htmlFor="preview-text">Preview Text:</label>
           <textarea
-            id="message-input"
+            id="preview-text"
             value={previewtext}
             onChange={(e) => setPreviewtext(e.target.value)}
-            placeholder="Enter your Previewtext here"
+            placeholder="Enter your Preview text here"
           />
-          <label htmlFor="message-input">Set Schedule Time:</label>
-           <input
-        type="datetime-local"
-        value={scheduledTime}
-        onChange={(e) =>setScheduledTime(e.target.value)}/>
-        <div className="action-btn">
-          <button
-            className="send-modal-submit-btn"
-            onClick={handleSend}
-            disabled={isProcessing}
-          >
-            {isProcessing ? "Processing..." : "Send Now"}
-          </button>
-          <button onClick={sendscheduleBulk} className="send-modal-submit-btn" >
-                Scheduled
-      </button>
-      </div>
+
+          {/* Toggle Button for Scheduled Mail */}
+          <div className="toggle-container">
+            
+            <span>{isScheduled ? "Scheduled Mail Enabled :" : "Scheduled Mail Disabled :"}</span>
+            <label className="switch">
+              <input
+                type="checkbox"
+                checked={isScheduled}
+                onChange={() => setIsScheduled(!isScheduled)}
+              />
+              <span className="slider-send round"></span>
+            </label>
+          </div>
+
+          {/* Show scheduled time input only if the toggle is enabled */}
+          {isScheduled && (
+            <div>
+              <label htmlFor="schedule-time">Set Schedule Time:</label>{" "}
+              <input
+                type="datetime-local"
+                id="schedule-time"
+                value={scheduledTime}
+                onChange={(e) => setScheduledTime(e.target.value)}
+              />
+            </div>
+          )}
+
+          <div className="action-btn">
+            <button
+              className="send-modal-submit-btn"
+              onClick={handleSend}
+              disabled={isProcessing || isScheduled} // Disable if scheduled is enabled
+            >
+              {isProcessing ? "Processing..." : "Send Now"}
+            </button>
+
+            <button
+              onClick={sendscheduleBulk}
+              className="send-modal-submit-btn"
+              disabled={isProcessingsch || !isScheduled} // Disable if scheduled is not enabled
+            >
+              {isProcessingsch ? "Processing..." : "Scheduled"}
+            </button>
+          </div>
         </div>
       </div>
 <ToastContainer className="custom-toast"
