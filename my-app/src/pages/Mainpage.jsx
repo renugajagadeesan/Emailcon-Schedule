@@ -430,7 +430,6 @@ try {
   //Normal Send Email
 const sendEmail = async () => {
     setIsLoading(true);
-    navigate("/home");
 
     // Validate required fields
     if (!previewContent || previewContent.length === 0) {
@@ -510,6 +509,8 @@ const sendEmail = async () => {
         });
 
         toast.success("Email sending process completed.");
+            navigate("/home");
+
     } catch (error) {
         console.error("Error in sendEmail:", error);
         toast.error("An error occurred while sending the email.");

@@ -17,7 +17,7 @@ cron.schedule('* * * * *', async () => {
 
         const camhistories = await Camhistory.find({
             status: "Scheduled On",
-            scheduledTime: { $gte: nowUTC.toISOString(), $lt: nextMinute.toISOString() }
+            scheduledTime: { $gte: nowUTC.toISOString(), $lt: nextMinute.toISOString()}
         });
 
         if (camhistories.length === 0) {
