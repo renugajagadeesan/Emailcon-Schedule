@@ -59,7 +59,6 @@ const sendscheduleBulk = async () => {
     }
 
   setIsProcessingsch(true);
-          navigate("/home");
 
 
   try {
@@ -98,6 +97,8 @@ const sendscheduleBulk = async () => {
 
         const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
         console.log("Initial Campaign History Saved:", campaignResponse.data);
+        toast.success("Email scheduled successfully!");
+        navigate("/home");
       }
       catch (error) {
         console.error("Error scheduling email:", error);

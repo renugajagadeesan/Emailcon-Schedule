@@ -388,7 +388,6 @@ if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previ
     return;
 }
 setIsLoadingsch(true);
-navigate("/home");
 
 try {
     let recipients = emailData.recipient.split(",").map(email => email.trim());
@@ -420,6 +419,7 @@ try {
         console.log("Initial Campaign History Saved:", campaignResponse.data);     
         localStorage.setItem("camhistory", JSON.stringify(campaignResponse.data));
         toast.success("Email scheduled successfully!");
+        navigate("/home");
    } catch (error) {
         console.error("Error scheduling email:", error);
         toast.error("Failed to schedule email.");

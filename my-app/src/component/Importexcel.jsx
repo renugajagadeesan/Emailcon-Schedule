@@ -103,8 +103,6 @@ const sendscheduleExcel = async () => {
         return;
     }
       setIsLoadingsch(true); // Show loader
-      navigate("/home");
-
     let sentEmails = [];
     let failedEmails = [];
 
@@ -141,6 +139,8 @@ const sendscheduleExcel = async () => {
 
         const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
         console.log("Initial Campaign History Saved:", campaignResponse.data);
+           toast.success("Email scheduled successfully!");
+        navigate("/home");
       }
       catch (error) {
         console.error("Error scheduling email:", error);

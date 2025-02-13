@@ -8,7 +8,6 @@ console.log("Cron job started for sending scheduled emails.");
 
 cron.schedule('* * * * *', async () => {
     try {
-        console.log("Checking for scheduled emails...");
         const nowUTC = new Date();
         nowUTC.setSeconds(0, 0); // Round to the nearest minute
         const nextMinute = new Date(nowUTC);

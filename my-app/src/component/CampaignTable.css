@@ -11,6 +11,7 @@
     padding-top: 10px;
     color: #2f327d;
     font-size: 25px;
+   
 
 }
 
@@ -23,6 +24,8 @@
     font-weight: bold;
     padding: 20px 10px;
     margin: 0px;
+     position: sticky;
+     top: 0;
 }
 
 .admin-nav-button {
@@ -49,21 +52,19 @@
   
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
-.cam-scroll{
+/* .cam-scroll{
     height: 580px !important;
      overflow: auto;
-}
+} */
 
 .cam-dashboard-table th {
     text-align: center;
     padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
 }
 
 .cam-dashboard-table td {
     text-align: center;
     padding: 1rem;
-    border-bottom: 1px solid #dee2e6;
 }
 
 .cam-dashboard-table th {
