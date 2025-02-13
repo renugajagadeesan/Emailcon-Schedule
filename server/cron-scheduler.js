@@ -13,7 +13,7 @@ cron.schedule('* * * * *', async () => {
         nowUTC.setSeconds(0, 0); // Round to the nearest minute
         const nextMinute = new Date(nowUTC);
         nextMinute.setMinutes(nextMinute.getMinutes() + 1);
-        console.log("Checking for scheduled emails at:", nowUTC.toISOString());
+        console.log("Checking for scheduled emails at:", nowUTC.toLocaleString());
 
         const camhistories = await Camhistory.find({
             status: "Scheduled On",
