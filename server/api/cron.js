@@ -1,6 +1,6 @@
 import axios from "axios";
 import apiConfig from "../../my-app/src/apiconfig/apiConfig.js";
-import Camhistory from "../../models/Camhistory.js";
+import Camhistory from "../models/Camhistory.js";
 import mongoose from "mongoose";
 
 export default async function handler(req, res) {
