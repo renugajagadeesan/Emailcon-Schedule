@@ -294,8 +294,8 @@ const handlecampaignhistory=()=>{
                 className="celebration-icon"
               />
               <h2>Welcome on board, {user.username}!</h2>
-              <p>Ready to rock ultimate landing pages?</p>
-              <button className="welcome-button" onClick={closePopup}>
+               <p>Explore the features and manage your groups efficiently.</p>
+                <button className="welcome-button" onClick={closePopup}>
                 Let's go!
               </button>
             </div>
