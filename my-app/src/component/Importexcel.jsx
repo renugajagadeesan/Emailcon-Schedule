@@ -313,8 +313,12 @@ if (!isOpen) return null;
         <div className="excel-modal-body">
           <h4>Sample excel format</h4>
           <img src={sampleexcel} alt="Sample Excel Format" className="sample-excel-image" />
-           <a href="../file/demoexcelfile.xlsx" download>
-             <button className="btn-download-sample">Download Sample File</button></a>
+           <div style={{display:"flex",gap:"10px"}}>
+              <a href="../file/democsvfile.csv" download>
+             <button className="modal-btn btn-download-sample">Download Sample csv File</button></a>
+             <a href="../file/demoexcelfile.xlsx" download>
+             <button className="modal-btn btn-download-sample">Download Sample xlsx File</button></a>
+            </div>
           <h4>Upload excel file</h4>
           <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
           {fileName && <p>Uploaded File: {fileName}</p>}

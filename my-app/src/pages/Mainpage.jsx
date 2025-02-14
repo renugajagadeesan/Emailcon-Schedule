@@ -511,7 +511,7 @@ const sendEmail = async () => {
             failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
             status: finalStatus,
         });
-
+        console.log("status updated:",finalStatus);
         toast.success("Email sending process completed.");
 
     } catch (error) {

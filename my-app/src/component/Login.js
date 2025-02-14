@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Login.css"; // Import the CSS file
-// import { AiFillMail } from "react-icons/ai";
-// import { FaEnvelope,FaLock } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiConfig from "../apiconfig/apiConfig.js";
 import logimg from "../Images/mail.png";
-
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +13,14 @@ function Login() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
+  // Check if the user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // If there's a token, redirect to the home page
+      navigate("/home");
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,13 +34,12 @@ function Login() {
         }
       );
       console.log(res.data.user); // Check the structure of the user data
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       navigate("/home");
     } catch (error) {
       toast.error(error.response.data || "Error logging in");
-    }
-    finally {
+    } finally {
       setIsLoading(false); // Stop loading
     }
   };
@@ -44,7 +48,6 @@ function Login() {
     <div className="login-page">
       <div className="login-cover">
         <div className="login-aside">
-          {/* <AiFillMail style={{ color: "white", fontSize: "90px" }} /> */}
           <img src={logimg} alt="Sample Excel Format" className="login-image" />
           <h2 style={{ fontWeight: "550", color: "#2f327d" }}>
             Welcome <span style={{ color: "#f48c06" }}>Back...!</span>
@@ -64,7 +67,7 @@ function Login() {
         <div className="login-container">
           <h2
             className="login-header"
-            style={{color: "#2f327d" }}
+            style={{ color: "#2f327d" }}
           >
             Log<span style={{ color: "#f48c06" }}>in</span>
           </h2>
@@ -73,7 +76,6 @@ function Login() {
               <label>Email</label>
             </div>
             <div className="input-container-login">
-              {/* <FaEnvelope className="input-icon" /> */}
               <input
                 type="email"
                 value={email}
@@ -86,7 +88,6 @@ function Login() {
               <label>Password</label>
             </div>
             <div className="input-container-login">
-              {/* <FaLock className="input-icon" /> */}
               <input
                 type="password"
                 value={password}

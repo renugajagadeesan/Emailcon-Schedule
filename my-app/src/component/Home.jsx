@@ -12,12 +12,13 @@ import GroupsingleModal from './GroupsingleModal';
 import GroupfileModal from './GroupfileModal';
 import GroupModalnew from './GroupModalnew.jsx';
 import ListPage from './ListPage.jsx';
-import { FaRegClipboard } from "react-icons/fa";
+import { FaRegClipboard,FaTimes } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa";
 import { FaUserCircle} from "react-icons/fa";
 import {MdWavingHand} from "react-icons/md";
 import imghome from "../Images/home-sidebar.jpg";
+import welcomeimg from "../Images/welcome.png";
 
 const Home = () => {
   const [view, setView] = useState("main");
@@ -35,7 +36,8 @@ const [showfileGroupModal, setShowfileGroupModal] = useState(false);
 
 useEffect(() => {
     if (!user) {
-      navigate("/");
+      navigate("/signup");
+      toast.warning("Signup first to access Homepage")
     } else {
       const modalShown = localStorage.getItem("modalShown");
       if (!modalShown) {
@@ -165,7 +167,7 @@ const handlecampaignhistory=()=>{
               >
                 <MdWavingHand size={17} />
               </span>{" "}
-              Hey <span style={{ color: "#f48c06" }}>{user.username}</span>
+              Hey <span style={{ color: "#f48c06" }}>{user?.username || "Guest"}</span>
             </h4>
             <div className="profile-container">
               <button onClick={toggleDropdown} className="profile-button">
@@ -270,17 +272,36 @@ const handlecampaignhistory=()=>{
           <ListPage onClose={() => setShowListPageModal(false)} />
         )}
         {/* welcome popup */}
-        {showPopup && (
-          <div className="home-overlay overlay">
+                {showPopup && (
+
+       <div className="home-overlay overlay">
             <div className="home-modal">
-              <button className="home-close-button" onClick={closePopup}>
+              {/* {showConfetti && <Confetti width={500} height={500} />} */}
+              <div className="confetti-wrapper">
+                {[...Array(30)].map((_, index) => (
+                  <div key={index} className="confetti"></div>
+                ))}
+              </div>
+              {/* <button className="home-close-button" onClick={closePopup}>
                 ✕
+              </button> */}
+              <button className="welcome-close-button"onClick={closePopup}>
+            <FaTimes className="text-red-500 cursor-pointer" />
               </button>
-              <h2>Welcome to Emailcon {user.username}!</h2>
-              <p>Explore the features and manage your groups efficiently.</p>
+              <img
+                src={welcomeimg}
+                alt="Celebration"
+                className="celebration-icon"
+              />
+              <h2>Welcome on board, {user.username}!</h2>
+              <p>Ready to rock ultimate landing pages?</p>
+              <button className="welcome-button" onClick={closePopup}>
+                Let's go!
+              </button>
             </div>
           </div>
-        )}
+                )}
+
         {/* Modal for Creating Campaign */}
         {showCampaignModal && (
           <div className="campaign-modal-overlay">

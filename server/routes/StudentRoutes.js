@@ -74,10 +74,10 @@ router.post('/sendtestmail', async (req, res) => {
       } else if (item.type === 'image') {
         return `<img src="${item.src}" style="margin-top:10px;width:${item.style.width};pointer-events:none;height:${item.style.height};border-radius:10px;text-align:${item.style.textAlign};background-color:${item.style.backgroundColor}"/>`;
       } else if (item.type === 'multi-image') {
-        return `<table style="width:100%; border-collapse:collapse;">
+          return `<table style="width:100%; border-collapse:collapse;">
         <tr>
             <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${item.src1}" style="border-radius:10px;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;" alt="image"/>
+                <img src="${item.src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;" alt="image"/>
                     <a class = "img-btn"
                     href = "${item.link1}"
                     target = "_blank"
@@ -86,7 +86,7 @@ router.post('/sendtestmail', async (req, res) => {
                     </a>
             </td>
             <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${item.src2}" style="border-radius:10px;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;" alt="image"/>
+                <img src="${item.src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;" alt="image"/>
                     <a class = "img-btn"
                     href = "${item.link2}"
                     target = "_blank"
@@ -96,6 +96,8 @@ router.post('/sendtestmail', async (req, res) => {
             </td>
         </tr>
     </table>`
+ 
+ 
       } else if (item.type === 'link-image') {
         return `<a href="${item.link || '#'}" taget="_blank" style="text-decoration:none;"><img src="${item.src}" style="margin-top:10px;width:${item.style.width};pointer-events:none;height:${item.style.height};border-radius:10px;text-align:${item.style.textAlign};background-color:${item.style.backgroundColor}"/></a>`;
       } else if (item.type === 'button') {
@@ -116,22 +118,54 @@ router.post('/sendtestmail', async (req, res) => {
           <head>
             <style>
               body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+   
               @media(max-width:768px) {
-                .main { width:330px !important; }
+                .main { 
+                  width:335px !important;
+                 }
                 .para{
                   font-size:15px !important;
                 }
+                
+  /* Keep images inline on small screens */
+  table tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  table tr td {
+    width: 48% !important; /* Ensures images stay side by side */
+    padding: 5px !important;
+  }
+  table tr td img {
+    height: 150px !important; /* Adjust image height for better fit */
+    width: 100% !important;
+    object-fit: cover !important;
+  } 
+
+                // .multimain td{
+                //   padding:5px 8px 0px 0px !important;
+                // }
+                // .multi-img{
+                //   width:100% !important;
+                //   max-width:170px !important;
+                //   height:auto !important;
+                //   object-fit: contain !important; 
+
+                // }
                  .img-btn{
                   width:85% !important;
-                  margin:0 auto !important;
+                  margin:10px auto !important;
                   font-size:10px !important;
                   padding:10px !important;
+                  
                 }
                 .head{
                   font-size:20px !important;
                 }
               }
             </style>
+
           </head>
 
           <body>
@@ -142,6 +176,7 @@ router.post('/sendtestmail', async (req, res) => {
               ${emailContent}
             </div>
           </body>
+      
         </html>
       `,
     };
@@ -157,6 +192,7 @@ router.post('/sendtestmail', async (req, res) => {
     res.status(500).send(`Error: ${error.message}`);
   }
 });
+
 //sendexcelmail directly
 router.post('/sendexcelEmail', async (req, res) => {
   const {
@@ -238,13 +274,13 @@ router.post('/sendexcelEmail', async (req, res) => {
           return `<table style="width:100%; border-collapse:collapse;">
         <tr>
             <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src1}" style="height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
+                <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
                     <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display: inline-block; padding: 12px 25px; text-decoration: none;">
                         ${content1}
                     </a>
             </td>
             <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src2}" style="height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
+                <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
                     <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display: inline-block; padding: 12px 25px; text-decoration: none;">
                         ${content2}
                     </a>
@@ -287,11 +323,40 @@ router.post('/sendexcelEmail', async (req, res) => {
                 .para{
                   font-size:15px !important;
                 }
-                .img-btn{
+              
+                
+  /* Keep images inline on small screens */
+  table tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  table tr td {
+    width: 48% !important; /* Ensures images stay side by side */
+    padding: 5px !important;
+  }
+  table tr td img {
+    height: 150px !important; /* Adjust image height for better fit */
+    width: 100% !important;
+    object-fit: cover !important;
+  } 
+
+                // .multimain td{
+                //   padding:5px 8px 0px 0px !important;
+                // }
+                // .multi-img{
+                //   width:100% !important;
+                //   max-width:170px !important;
+                //   height:auto !important;
+                //   object-fit: contain !important; 
+
+                // }
+                 .img-btn{
                   width:85% !important;
-                  margin:0 auto !important;
+                  margin:10px auto !important;
                   font-size:10px !important;
                   padding:10px !important;
+                  
                 }
                 .head{
                   font-size:20px !important;
@@ -396,22 +461,22 @@ router.post('/sendbulkEmail', async (req, res) => {
           return `<a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>`;
 
         case 'multi-image':
-          return `<table style="width:100%; border-collapse:collapse;">
-        <tr>
-            <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src1}" style="height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display: inline-block; padding: 12px 25px; text-decoration: none;">
+        return `<table style="width:100%; border-collapse:collapse;">
+            <tr>
+                <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                    <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
+                    <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display:inline-block; padding:12px 25px; text-decoration:none;">
                         ${content1}
                     </a>
-            </td>
-            <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src2}" style="height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display: inline-block; padding: 12px 25px; text-decoration: none;">
+                </td>
+                <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                    <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;${styleString}" alt="image"/>
+                    <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display:inline-block; padding:12px 25px; text-decoration:none;">
                         ${content2}
                     </a>
-            </td>
-        </tr>
-    </table>`;
+                </td>
+            </tr>
+          </table>`;
 
         case 'image':
           return `<img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />`;
@@ -448,11 +513,40 @@ router.post('/sendbulkEmail', async (req, res) => {
                 .para{
                   font-size:15px !important;
                 }
-                  .img-btn{
+                 
+                
+  /* Keep images inline on small screens */
+  table tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  table tr td {
+    width: 48% !important; /* Ensures images stay side by side */
+    padding: 5px !important;
+  }
+  table tr td img {
+    height: 150px !important; /* Adjust image height for better fit */
+    width: 100% !important;
+    object-fit: cover !important;
+  } 
+
+                // .multimain td{
+                //   padding:5px 8px 0px 0px !important;
+                // }
+                // .multi-img{
+                //   width:100% !important;
+                //   max-width:170px !important;
+                //   height:auto !important;
+                //   object-fit: contain !important; 
+
+                // }
+                 .img-btn{
                   width:85% !important;
-                  margin:0 auto !important;
+                  margin:10px auto !important;
                   font-size:10px !important;
                   padding:10px !important;
+                  
                 }
                 .head{
                   font-size:20px !important;
