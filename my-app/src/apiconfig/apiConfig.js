@@ -1,6 +1,6 @@
 // src/apiConfig.js
 const apiConfig = {
-    baseURL:"http://localhost:5000",
+    baseURL: "https://emailcon-campaign-backend.onrender.com",
 };
 
 export default apiConfig;

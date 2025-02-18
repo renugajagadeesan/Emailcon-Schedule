@@ -48,19 +48,33 @@ router.post('/sendtestmail', async (req, res) => {
       smtppassword
     } = user;
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.hostinger.com',
-      port: 465,
-      secure: true, // Use SSL/TLS
-      auth: {
-        user: email,
-        pass: smtppassword
-      },
-      tls: {
-        // Do not fail on invalid certificates
-        rejectUnauthorized: false
-      }
-    });
+   // Determine the transporter based on email provider
+   let transporter;
+
+   if (email.includes("gmail")) {
+     transporter = nodemailer.createTransport({
+       service: "gmail",
+       auth: {
+         user: email,
+         pass: smtppassword,
+       },
+     });
+   } else {
+     transporter = nodemailer.createTransport({
+       host: "smtp.hostinger.com",
+       port: 465,
+       secure: true, // Use SSL/TLS
+       auth: {
+         user: email,
+         pass: smtppassword,
+       },
+       tls: {
+         // Do not fail on invalid certificates
+         rejectUnauthorized: false,
+       },
+     });
+   }
+
 
     const emailContent = previewContent.map((item) => {
       if (item.type === 'para') {
@@ -221,20 +235,33 @@ router.post('/sendexcelEmail', async (req, res) => {
   } = user;
 
 
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.com', // Hostinger SMTP server
-    port: 465, // Alternative port
-    secure: true, // Set to false for STARTTLS    
-    auth: {
-      user: email,
-      pass: smtppassword, // Use a secure app smtppassword or hostinger password
-    },
-    tls: {
-      // Do not fail on invalid certificates
-      rejectUnauthorized: false
-    }
+ // Determine the transporter based on email provider
+ let transporter;
 
-  });
+ if (email.includes("gmail")) {
+   transporter = nodemailer.createTransport({
+     service: "gmail",
+     auth: {
+       user: email,
+       pass: smtppassword,
+     },
+   });
+ } else {
+   transporter = nodemailer.createTransport({
+     host: "smtp.hostinger.com",
+     port: 465,
+     secure: true, // Use SSL/TLS
+     auth: {
+       user: email,
+       pass: smtppassword,
+     },
+     tls: {
+       // Do not fail on invalid certificates
+       rejectUnauthorized: false,
+     },
+   });
+ }
+
 
   try {
     // Parse the body string as JSON
@@ -412,20 +439,34 @@ router.post('/sendbulkEmail', async (req, res) => {
     smtppassword
   } = user;
 
+// Determine the transporter based on email provider
+let transporter;
 
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.com', // Hostinger SMTP server
-    port: 465, // Alternative port
-    secure: true, // Set to false for STARTTLS
+if (email.includes("gmail")) {
+  transporter = nodemailer.createTransport({
+    service: "gmail",
     auth: {
       user: email,
-      pass: smtppassword, // Use a secure app smtppassword or hostinger password
+      pass: smtppassword,
+    },
+  });
+} else {
+  transporter = nodemailer.createTransport({
+    host: "smtp.hostinger.com",
+    port: 465,
+    secure: true, // Use SSL/TLS
+    auth: {
+      user: email,
+      pass: smtppassword,
     },
     tls: {
       // Do not fail on invalid certificates
-      rejectUnauthorized: false
-    }
+      rejectUnauthorized: false,
+    },
   });
+}
+
+
   try {
     // Parse the body string as JSON
     const bodyElements = JSON.parse(body);

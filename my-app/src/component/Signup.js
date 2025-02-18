@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./Signup.css"; // Import the CSS
-// import { FaEnvelope, FaUser, FaLock } from "react-icons/fa";
-// import { AiFillMail } from "react-icons/ai";
+import "./Signup.css";
 import { ToastContainer, toast } from "react-toastify";
+import { FaInfoCircle } from "react-icons/fa";
 import "react-toastify/dist/ReactToastify.css";
 import apiConfig from "../apiconfig/apiConfig.js";
 import sign from "../Images/ex1.png";
@@ -13,14 +12,13 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-   const [smtppassword, setSmtppassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [smtppassword, setSmtppassword] = useState("");
+  const [authMethod, setAuthMethod] = useState("Hostinger");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
-
     try {
       const response = await axios.post(`${apiConfig.baseURL}/api/auth/signup`, {
         email,
@@ -36,8 +34,6 @@ function Signup() {
       }, 4000);
     } catch (error) {
       toast.error(error.response ? error.response.data : "Error signing up");
-    } finally {
-      setIsLoading(false); // Stop loading
     }
   };
 
@@ -45,7 +41,7 @@ function Signup() {
     <div className="signup-page">
       <div className="signup-cover">
         <div className="signup-aside">
-          <img src={sign} alt="Sample Excel Format" className="signup-image" />
+          <img src={sign} alt="Sample signup img" className="signup-image"/>
           <h2 style={{ fontWeight: "550", color: "#2f327d" }}>
             Welcome To <span style={{ color: "#f48c06" }}>Emailcon...!</span>
           </h2>
@@ -66,6 +62,19 @@ function Signup() {
           <h2 className="signup-header">
             Sign<span style={{ color: "#f48c06" }}>up</span>
           </h2>
+          <div className="dropdown-container">
+            <div className="label">
+              <label>Select Mail Service</label>
+            </div>
+            <select
+              value={authMethod}
+              onChange={(e) => setAuthMethod(e.target.value)}
+              className="signup-dropdown"
+            >
+              <option value="Hostinger">Hostinger</option>
+              <option value="Gmail">Gmail</option>
+            </select>
+          </div>
           <form onSubmit={handleSubmit} className="form-content">
             <div className="label">
               <label>Email</label>
@@ -92,7 +101,7 @@ function Signup() {
               />
             </div>
             <div className="label">
-              <label>Password</label>
+              <label>User Password</label>
             </div>
             <div className="input-container-sign">
               <input
@@ -104,7 +113,21 @@ function Signup() {
               />
             </div>
             <div className="label">
-              <label>Hostinger Password</label>
+              <label>
+                {authMethod === "Gmail"
+                  ? "SMTP App Passcode"
+                  : "Hostinger Password"}
+              </label>
+              {authMethod === "Gmail" && (
+                <FaInfoCircle
+                  className="info-icon"
+ onClick={() => {
+    console.log("Info icon clicked!");
+    setIsModalOpen(true);
+  }}
+                  style={{ cursor: "pointer", marginLeft: "5px" }}
+                />
+              )}
             </div>
             <div className="input-container">
               <input
@@ -116,16 +139,8 @@ function Signup() {
               />
             </div>
             <div className="sub-btn">
-              <button
-                type="submit"
-                className="signup-button signup-submit"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="loader-signup"></span> // Spinner
-                ) : (
-                  "Sign Up"
-                )}
+              <button type="submit" className="signup-button signup-submit">
+                Sign in
               </button>
             </div>
             <div className="sign-log">
@@ -140,6 +155,29 @@ function Signup() {
           </form>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal-container">
+            <h3>Steps to Get Gmail SMTP App Passcode</h3>
+            <ol>
+              <li>Go to your Google Account Security Settings.</li>
+              <li>Enable 2-Step Verification.</li>
+              <li>Navigate to "App Passwords" section.</li>
+              <li>
+                Generate a new app password for "Mail" and select your device.
+              </li>
+              <li>Copy and use the generated passcode in the SMTP App Passcode field.</li>
+              <li>Sample 16 digit App Passcode is <strong>deyq kjki kvii olua.</strong></li>
+            </ol>
+            <button onClick={() => setIsModalOpen(false)} className="modal-close-button">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       <ToastContainer
         className="custom-toast"
         position="bottom-center"
@@ -150,7 +188,7 @@ function Signup() {
         pauseOnHover={true}
         draggable={true}
         theme="light"
-      />
+        />
     </div>
   );
 }

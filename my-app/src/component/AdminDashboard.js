@@ -7,25 +7,30 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiconfig from '../apiconfig/apiConfig.js'
 
-
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
-   const [loading, setLoading] = useState(false); // State for the loader
-   const [loadingUserId, setLoadingUserId] = useState(null); // State for the specific user being updated
+  const [loading, setLoading] = useState(false); // State for the loader
+  const [loadingUserId, setLoadingUserId] = useState(null); // State for the specific user being updated
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axios.get(`${apiconfig.baseURL}/api/admin/users`);
-      setUsers(response.data);
-    };
-    fetchUsers();
-  }, []);
-   const navigate = useNavigate();
+    // Check if the adminToken is present in localStorage
+    const adminToken = localStorage.getItem("adminToken");
+    if (!adminToken) {
+      navigate("/admin-login"); // Redirect to login page if no adminToken
+    } else {
+      const fetchUsers = async () => {
+        const response = await axios.get(`${apiconfig.baseURL}/api/admin/users`);
+        setUsers(response.data);
+      };
+      fetchUsers();
+    }
+  }, [navigate]);
 
-   const handleLogout = () => {
-     localStorage.removeItem("adminToken");
-     navigate("/");
-   };
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    navigate("/"); // Redirect to homepage or login page after logout
+  };
 
   const handleStatusChange = async (id, status) => {
     setLoading(true);
@@ -53,16 +58,16 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard-page">
       <div className="admin-nav">
-      <h2 className="admin-dashboard-header">Admin Dashboard</h2>
+        <h2 className="admin-dashboard-header">Admin Dashboard</h2>
         <button onClick={handleLogout} className="admin-nav-button">
-            <span className="admin-nav-icons">
-              <FaSignOutAlt />
-            </span>
-            <span className="nav-names">Logout</span>
-          </button>
-          </div>
-                <h2 className="admin-dashboard-heading">Emailcon Signup Details</h2>
-<div className="admin-scroll">
+          <span className="admin-nav-icons">
+            <FaSignOutAlt />
+          </span>{" "}
+          <span className="nav-names">Logout</span>
+        </button>
+      </div>
+      <h2 className="admin-dashboard-heading">Emailcon Signup Details</h2>
+
       <table className="admin-dashboard-table">
         <thead>
           <tr>
@@ -102,18 +107,18 @@ function AdminDashboard() {
           ))}
         </tbody>
       </table>
-  </div>
-<ToastContainer className="custom-toast"
-  position="bottom-center"
-      autoClose= {3000} 
-      hideProgressBar={true} // Disable progress bar
-      closeOnClick= {false}
-      closeButton={false}
-      pauseOnHover= {true}
-      draggable= {true}
-      theme= "light" // Optional: Choose theme ('light', 'dark', 'colored')
-/>
-       
+
+      <ToastContainer
+        className="custom-toast"
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={true} // Disable progress bar
+        closeOnClick={false}
+        closeButton={false}
+        pauseOnHover={true}
+        draggable={true}
+        theme="light" // Optional: Choose theme ('light', 'dark', 'colored')
+      />
     </div>
   );
 }
