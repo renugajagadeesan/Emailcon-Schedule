@@ -57,7 +57,8 @@
     border: 1px solid #cccccc;
     border-radius: 4px;
 }
-.action-btn{
+
+.action-btn {
     display: flex;
     gap: 10px;
 }
@@ -76,6 +77,7 @@
 .send-modal-submit-btn:hover {
     background-color: #26286e;
 }
+
 .switch {
     position: relative;
     display: inline-block;
@@ -114,7 +116,7 @@
 }
 
 input:checked+.slider-send {
-    background-color:#2f327d;
+    background-color: #2f327d;
 }
 
 input:checked+.slider-send:before {

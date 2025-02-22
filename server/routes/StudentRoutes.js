@@ -48,32 +48,32 @@ router.post('/sendtestmail', async (req, res) => {
       smtppassword
     } = user;
 
-   // Determine the transporter based on email provider
-   let transporter;
+    // Determine the transporter based on email provider
+    let transporter;
 
-   if (email.includes("gmail")) {
-     transporter = nodemailer.createTransport({
-       service: "gmail",
-       auth: {
-         user: email,
-         pass: smtppassword,
-       },
-     });
-   } else {
-     transporter = nodemailer.createTransport({
-       host: "smtp.hostinger.com",
-       port: 465,
-       secure: true, // Use SSL/TLS
-       auth: {
-         user: email,
-         pass: smtppassword,
-       },
-       tls: {
-         // Do not fail on invalid certificates
-         rejectUnauthorized: false,
-       },
-     });
-   }
+    if (email.includes("gmail")) {
+      transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: email,
+          pass: smtppassword,
+        },
+      });
+    } else {
+      transporter = nodemailer.createTransport({
+        host: "smtp.hostinger.com",
+        port: 465,
+        secure: true, // Use SSL/TLS
+        auth: {
+          user: email,
+          pass: smtppassword,
+        },
+        tls: {
+          // Do not fail on invalid certificates
+          rejectUnauthorized: false,
+        },
+      });
+    }
 
 
     const emailContent = previewContent.map((item) => {
@@ -82,13 +82,15 @@ router.post('/sendtestmail', async (req, res) => {
       } else if (item.type === 'head') {
         return `<p class="head" style="font-size:${item.style.fontSize};border-radius:10px;padding:10px;font-weight:bold;color:${item.style.color};text-align:${item.style.textAlign};background-color:${item.style.backgroundColor}">${item.content}</p>`;
       } else if (item.type === 'logo') {
-        return `<div style="width:${item.style.width};text-align:${item.style.textAlign};border-radius:10px;margin-top:10px;background-color:${item.style.backgroundColor};">
-                  <img src="${item.src}" style="width:30%;border-radius:10px;height:${item.style.height};pointer-events:none;"/>
-                </div>`;
+        return `<div style="text-align:${item.style.textAlign};margin:0 auto !important">
+        <img src="${item.src}" style="width:${item.style.width};height:${item.style.height};border-radius:${item.style.borderRadius};pointer-events:none;margin:${item.style.margin};background-color:${item.style.backgroundColor};"/>
+        </div>`
       } else if (item.type === 'image') {
-        return `<img src="${item.src}" style="margin-top:10px;width:${item.style.width};pointer-events:none;height:${item.style.height};border-radius:10px;text-align:${item.style.textAlign};background-color:${item.style.backgroundColor}"/>`;
+        return `<div style="text-align:${item.style.textAlign};margin:0 auto !important">
+        <img src="${item.src}" style="margin-top:10px;width:${item.style.width};pointer-events:none;height:${item.style.height};border-radius:10px;background-color:${item.style.backgroundColor}"/>
+        </div>`;
       } else if (item.type === 'multi-image') {
-          return `<table style="width:100%; border-collapse:collapse;">
+        return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
         <tr>
             <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
                 <img src="${item.src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;" alt="image"/>
@@ -110,10 +112,88 @@ router.post('/sendtestmail', async (req, res) => {
             </td>
         </tr>
     </table>`
- 
- 
+
+      } else if (item.type === 'icons') {
+        return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${item.ContentStyle.backgroundColor || 'white'}; border-radius:${item.ContentStyle.borderRadius || '10px'}; margin:15px 0px !important;">
+            <tr>
+                <td align="${item.ContentStyle.textAlign}" style="padding: 20px; text-align: center;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                        <tr>
+                            <td style="padding: 0 10px;">
+                                <a href="${item.links1 || '#'}" target="_blank" style="text-decoration:none;">
+                                    <img src="${item.iconsrc1}" style="cursor:pointer;width:${item.style1.width};height:${item.style1.height};" alt="icon1"/>
+                                </a>
+                            </td>
+                            <td style="padding: 0 10px;">
+                                <a href="${item.links2 || '#'}" target="_blank" style="text-decoration:none;">
+                                    <img src="${item.iconsrc2}" style="cursor:pointer;width:${item.style2.width};height:${item.style2.height};" alt="icon2"/>
+                                </a>
+                            </td>
+                            <td style="padding: 0 12px;">
+                                <a href="${item.links3 || '#'}" target="_blank" style="text-decoration:none;">
+                                    <img src="${item.iconsrc3}" style="cursor:pointer;width:${item.style3.width};height:${item.style3.height};" alt="icon3"/>
+                                </a>
+                            </td>
+                            <td style="padding: 0 10px;">
+                                <a href="${item.links4 || '#'}" target="_blank" style="text-decoration:none;">
+                                    <img src="${item.iconsrc4}" style="cursor:pointer;width:${item.style4.width};height:${item.style4.height};" alt="icon4"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>`;
+      } else if (item.type === 'video-icon') {
+        return `
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+<tr>
+  <td align="center">
+    <table role="presentation" width="${item.style.width}" height="${item.style.height}" cellspacing="0" cellpadding="0" border="0" 
+           style="background: url('${item.src1}') no-repeat center center; background-size: cover; border-radius: 10px; overflow: hidden;margin:15px 0px !important;">
+      <tr>
+        <td align="center" valign="middle" style="height:${item.style.height}; padding: 0;">
+          <a href="${item.link}" target="_blank">
+            <img src="${item.src2}" width="70" height="70" 
+                 style="display: block; border-radius: 50%; background-color: white;" 
+                 alt="Click Now" />
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>`;
+      } else if (item.type === 'imagewithtext') {
+        return `<table class="image-text" style="width:100%;height:220px !important;background-color:${item.style1.backgroundColor || '#f4f4f4'}; border-collapse:seperate;border-radius:${item.style1.borderRadius || '10px'};margin:15px 0px !important">
+        <tr>
+            <td style = "vertical-align:top;padding:10px;" >
+                <img  src="${item.src1}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+            </td>
+            <td style = "vertical-align:top;padding:10px;color:${item.style1.color || 'black'};" >
+                <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+                ${item.content1}
+                </div>
+            </td>
+        </tr>
+    </table>`;
+      } else if (item.type === 'textwithimage') {
+        return `<table class="image-text" style="width:100%;height:220px !important;background-color:${item.style.backgroundColor || '#f4f4f4'}; border-collapse:seperate;border-radius:${item.style.borderRadius || '10px'};margin:15px 0px !important">
+        <tr>
+          <td style = "vertical-align:top;padding:10px;color:${item.style.color || 'black'};" >
+                <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+                ${item.content2}
+                </div> 
+            </td>
+            <td style = "vertical-align:top;padding:10px;" >
+                <img  src="${item.src2}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+            </td>         
+        </tr>
+    </table>`
       } else if (item.type === 'link-image') {
-        return `<a href="${item.link || '#'}" taget="_blank" style="text-decoration:none;"><img src="${item.src}" style="margin-top:10px;width:${item.style.width};pointer-events:none;height:${item.style.height};border-radius:10px;text-align:${item.style.textAlign};background-color:${item.style.backgroundColor}"/></a>`;
+        return `<div style="text-align:${item.style.textAlign};margin:0 auto !important">
+        <a href="${item.link || '#'}" taget="_blank" style="text-decoration:none;"><img src="${item.src}" style="margin-top:10px;width:${item.style.width};text-align:${item.style.textAlign};pointer-events:none;height:${item.style.height};border-radius:10px;background-color:${item.style.backgroundColor}"/></a>
+        </div>`;
       } else if (item.type === 'button') {
         return `<div style="text-align:${item.style.textAlign || 'left'};padding-top:20px;">
                   <a href="${item.link || '#'}" target="_blank" style="display:inline-block;padding:12px 25px;width:${item.style.width || 'auto'};color:${item.style.color || '#000'};text-decoration:none;background-color:${item.style.backgroundColor || '#f0f0f0'};text-align:${item.style.textAlign || 'left'};border-radius:${item.style.borderRadius || '0px'};">
@@ -132,26 +212,37 @@ router.post('/sendtestmail', async (req, res) => {
           <head>
             <style>
               body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-   
+               
               @media(max-width:768px) {
-                .main { 
-                  width:335px !important;
-                 }
+                .main { width: 330px !important; }
+                .img-case { width: 330px !important; }
+
                 .para{
                   font-size:15px !important;
                 }
-                
-  /* Keep images inline on small screens */
-  table tr {
+                .img-para{
+                  font-size:15px !important;
+                }
+                .image-text{
+                  width:330px !important;}
+                            
+              .image-text tr{
     display: flex !important;
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
   }
-  table tr td {
+                
+  /* Keep images inline on small screens */
+  .multi tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  .multi tr td {
     width: 48% !important; /* Ensures images stay side by side */
     padding: 5px !important;
   }
-  table tr td img {
+  .multi tr td img {
     height: 150px !important; /* Adjust image height for better fit */
     width: 100% !important;
     object-fit: cover !important;
@@ -179,7 +270,6 @@ router.post('/sendtestmail', async (req, res) => {
                 }
               }
             </style>
-
           </head>
 
           <body>
@@ -234,33 +324,32 @@ router.post('/sendexcelEmail', async (req, res) => {
     smtppassword
   } = user;
 
+  // Determine the transporter based on email provider
+  let transporter;
 
- // Determine the transporter based on email provider
- let transporter;
-
- if (email.includes("gmail")) {
-   transporter = nodemailer.createTransport({
-     service: "gmail",
-     auth: {
-       user: email,
-       pass: smtppassword,
-     },
-   });
- } else {
-   transporter = nodemailer.createTransport({
-     host: "smtp.hostinger.com",
-     port: 465,
-     secure: true, // Use SSL/TLS
-     auth: {
-       user: email,
-       pass: smtppassword,
-     },
-     tls: {
-       // Do not fail on invalid certificates
-       rejectUnauthorized: false,
-     },
-   });
- }
+  if (email.includes("gmail")) {
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: email,
+        pass: smtppassword,
+      },
+    });
+  } else {
+    transporter = nodemailer.createTransport({
+      host: "smtp.hostinger.com",
+      port: 465,
+      secure: true, // Use SSL/TLS
+      auth: {
+        user: email,
+        pass: smtppassword,
+      },
+      tls: {
+        // Do not fail on invalid certificates
+        rejectUnauthorized: false,
+      },
+    });
+  }
 
 
   try {
@@ -278,57 +367,167 @@ router.post('/sendexcelEmail', async (req, res) => {
         src2,
         src,
         style,
+        style1,
+        style2,
+        style3,
+        style4,
         link,
+        links1,
+        links2,
+        links3,
+        links4,
+        ContentStyle,
+        iconsrc1,
+        iconsrc2,
+        iconsrc3,
+        iconsrc4,
         link2,
         link1,
         buttonStyle1,
         buttonStyle2,
       } = element;
+      const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleStringvideo = Object.entries(style || {})
+        .filter(([key]) => key === 'width' || key === 'height')
+        .map(([key, value]) => `${key}:${value}`)
+        .join(';');
 
       switch (type) {
         case 'logo':
-          return `<div style="border-radius:10px;${styleString};margin-top:10px;">
-                    <img src="${src}" style="width:30%;border-radius:10px;" alt="image"/>
-                  </div>`;
+          return `<div style="margin:0 auto !important;${styleString};">
+                  <img src="${src}" style="margin-top:10px;${styleString};" alt="image"/>
+                </div>`;
 
-        case 'link-image':
-          return `<a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>`;
+        case 'image':
+          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+       <img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />
+       </div>`;
 
-        case 'multi-image':
-          return `<table style="width:100%; border-collapse:collapse;">
+        case 'imagewithtext':
+          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
+      <tr>
+          <td style = "vertical-align:top;padding:10px;">
+              <img  src="${src1}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+          </td>
+          <td style = "vertical-align:top;padding:10px;${styleString1};">
+              <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+              ${content1}
+              </div>
+          </td>
+      </tr>
+  </table>`;
+
+        case 'textwithimage':
+          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
+      <tr>
+        <td style = "vertical-align:top;padding:10px;${styleString};">
+              <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+              ${content2}
+              </div>
+          </td>
+          <td style = "vertical-align:top;padding:10px;">
+              <img  src="${src2}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+          </td>
+        
+      </tr>
+  </table>`;
+
+        case 'video-icon':
+          return `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+<tr>
+  <td align="center">
+    <table role="presentation"  cellspacing="0" cellpadding="0" border="0" 
+           style="${styleStringvideo};background: url('${src1}') no-repeat center center; background-size: cover; border-radius: 10px; overflow: hidden;margin:15px 0px !important;">
+      <tr>
+        <td align="center" valign="middle" style="${styleStringvideo};padding: 0;">
+          <a href="${link}" target="_blank">
+            <img src="${src2}" width="70" height="70" 
+                 style="display: block; border-radius: 50%; background-color: white;" 
+                 alt="Click Now" />
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+  `;
+
+
+        case 'icons':
+          return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
         <tr>
-            <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display: inline-block; padding: 12px 25px; text-decoration: none;">
-                        ${content1}
-                    </a>
-            </td>
-            <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display: inline-block; padding: 12px 25px; text-decoration: none;">
-                        ${content2}
-                    </a>
+            <td style="padding: 20px; text-align:center;${ContentStyleString};">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tr>
+                        <td style="padding: 0 10px;">
+                            <a href="${links1 || '#'}" target="_blank" style="text-decoration:none;">
+                                <img src="${iconsrc1}" style="cursor:pointer;${styleString1};" alt="icon1"/>
+                            </a>
+                        </td>
+                        <td style="padding: 0 10px;">
+                            <a href="${links2 || '#'}" target="_blank" style="text-decoration:none;">
+                                <img src="${iconsrc2}" style="cursor:pointer;${styleString2};" alt="icon2"/>
+                            </a>
+                        </td>
+                        <td style="padding: 0 12px;">
+                        <a href="${links3 || '#'}" target="_blank" style="text-decoration:none;">
+                            <img src="${iconsrc3}" style="cursor:pointer;${styleString3};" alt="icon3"/>
+                        </a>
+                    </td>
+                     <td style="padding: 0 10px;">
+                        <a href="${links4 || '#'}" target="_blank" style="text-decoration:none;">
+                            <img src="${iconsrc4}" style="cursor:pointer;${styleString4};" alt="icon3"/>
+                        </a>
+                    </td>                     
+                  </tr>
+                </table>
             </td>
         </tr>
     </table>`;
 
-        case 'image':
-          return `<img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />`;
+        case 'link-image':
+          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+        <a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>
+        </div>`;
+
+        case 'multi-image':
+          return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
+          <tr>
+              <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                  <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
+                  <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display:inline-block; padding:12px 25px; text-decoration:none;">
+                      ${content1}
+                  </a>
+              </td>
+              <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                  <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;${styleString}" alt="image"/>
+                  <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display:inline-block; padding:12px 25px; text-decoration:none;">
+                      ${content2}
+                  </a>
+              </td>
+          </tr>
+        </table>`;
         case 'head':
           return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
         case 'para':
           return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
         case 'button':
           return `<div style="margin:20px auto 0 auto;text-align:center;">
-                    <a href = "${link}"
-                    target = "_blank"
-                    style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
-                      ${content}
-                    </a>
-                  </div>`;
+                  <a href = "${link}"
+                  target = "_blank"
+                  style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
+                    ${content}
+                  </a>
+                </div>`;
         default:
           return '';
       }
@@ -345,24 +544,50 @@ router.post('/sendexcelEmail', async (req, res) => {
           <head>
             <style>
               body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+              
+             .img-case {
+  margin:0 auto !important;
+  text-align:center !important;
+  display:block;
+  width:100%;
+  max-width: 650px; /* Adjust as needed */
+}
+
+.img-case img {
+  display: block;
+  margin: 0 auto; /* Ensures the image is centered */
+  max-width: 100%;
+  height: auto; /* Ensures the image maintains its aspect ratio */
+}
+           
+
               @media(max-width:768px) {
                 .main { width: 330px !important; }
+                .img-case { width: 330px !important; }
+
                 .para{
                   font-size:15px !important;
                 }
-              
-                
-  /* Keep images inline on small screens */
-  table tr {
+                .img-para{
+                  font-size:12px !important;
+                }
+                  .image-text tr{
     display: flex !important;
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
   }
-  table tr td {
+                
+  /* Keep images inline on small screens */
+  .multi tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  .multi tr td {
     width: 48% !important; /* Ensures images stay side by side */
     padding: 5px !important;
   }
-  table tr td img {
+  .multi tr td img {
     height: 150px !important; /* Adjust image height for better fit */
     width: 100% !important;
     object-fit: cover !important;
@@ -388,7 +613,6 @@ router.post('/sendexcelEmail', async (req, res) => {
                 .head{
                   font-size:20px !important;
                 }
-               
               }
             </style>
           </head>
@@ -412,6 +636,8 @@ router.post('/sendexcelEmail', async (req, res) => {
     res.status(500).send(error.toString());
   }
 });
+
+
 //Sendbulk mail using group
 router.post('/sendbulkEmail', async (req, res) => {
   const {
@@ -439,32 +665,32 @@ router.post('/sendbulkEmail', async (req, res) => {
     smtppassword
   } = user;
 
-// Determine the transporter based on email provider
-let transporter;
+  // Determine the transporter based on email provider
+  let transporter;
 
-if (email.includes("gmail")) {
-  transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: email,
-      pass: smtppassword,
-    },
-  });
-} else {
-  transporter = nodemailer.createTransport({
-    host: "smtp.hostinger.com",
-    port: 465,
-    secure: true, // Use SSL/TLS
-    auth: {
-      user: email,
-      pass: smtppassword,
-    },
-    tls: {
-      // Do not fail on invalid certificates
-      rejectUnauthorized: false,
-    },
-  });
-}
+  if (email.includes("gmail")) {
+    transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: email,
+        pass: smtppassword,
+      },
+    });
+  } else {
+    transporter = nodemailer.createTransport({
+      host: "smtp.hostinger.com",
+      port: 465,
+      secure: true, // Use SSL/TLS
+      auth: {
+        user: email,
+        pass: smtppassword,
+      },
+      tls: {
+        // Do not fail on invalid certificates
+        rejectUnauthorized: false,
+      },
+    });
+  }
 
 
   try {
@@ -482,57 +708,167 @@ if (email.includes("gmail")) {
         src2,
         src,
         style,
+        style1,
+        style2,
+        style3,
+        style4,
         link,
+        links1,
+        links2,
+        links3,
+        links4,
+        ContentStyle,
+        iconsrc1,
+        iconsrc2,
+        iconsrc3,
+        iconsrc4,
         link2,
         link1,
         buttonStyle1,
         buttonStyle2,
       } = element;
+      const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
       const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+      const styleStringvideo = Object.entries(style || {})
+        .filter(([key]) => key === 'width' || key === 'height')
+        .map(([key, value]) => `${key}:${value}`)
+        .join(';');
 
       switch (type) {
         case 'logo':
-          return `<div style="border-radius:10px;${styleString};margin-top:10px;">
-                    <img src="${src}" style="width:30%;border-radius:10px;" alt="image"/>
-                  </div>`;
-
-        case 'link-image':
-          return `<a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>`;
-
-        case 'multi-image':
-        return `<table style="width:100%; border-collapse:collapse;">
-            <tr>
-                <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                    <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display:inline-block; padding:12px 25px; text-decoration:none;">
-                        ${content1}
-                    </a>
-                </td>
-                <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
-                    <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;${styleString}" alt="image"/>
-                    <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display:inline-block; padding:12px 25px; text-decoration:none;">
-                        ${content2}
-                    </a>
-                </td>
-            </tr>
-          </table>`;
+          return `<div style="margin:0 auto !important;${styleString};">
+                  <img src="${src}" style="margin-top:10px;${styleString};" alt="image"/>
+                </div>`;
 
         case 'image':
-          return `<img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />`;
+          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+       <img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />
+       </div>`;
+
+        case 'imagewithtext':
+          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
+      <tr>
+          <td style = "vertical-align:top;padding:10px;">
+              <img  src="${src1}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+          </td>
+          <td style = "vertical-align:top;padding:10px;${styleString1};">
+              <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+              ${content1}
+              </div>
+          </td>
+      </tr>
+  </table>`;
+
+        case 'textwithimage':
+          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
+      <tr>
+        <td style = "vertical-align:top;padding:10px;${styleString};">
+              <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
+              ${content2}
+              </div>
+          </td>
+          <td style = "vertical-align:top;padding:10px;">
+              <img  src="${src2}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
+          </td>
+        
+      </tr>
+  </table>`;
+
+        case 'video-icon':
+          return `
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+<tr>
+  <td align="center">
+    <table role="presentation"  cellspacing="0" cellpadding="0" border="0" 
+           style="${styleStringvideo};background: url('${src1}') no-repeat center center; background-size: cover; border-radius: 10px; overflow: hidden;margin:15px 0px !important;">
+      <tr>
+        <td align="center" valign="middle" style="${styleStringvideo};padding: 0;">
+          <a href="${link}" target="_blank">
+            <img src="${src2}" width="70" height="70" 
+                 style="display: block; border-radius: 50%; background-color: white;" 
+                 alt="Click Now" />
+          </a>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+  `;
+
+
+        case 'icons':
+          return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
+        <tr>
+            <td style="padding: 20px; text-align:center;${ContentStyleString};">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tr>
+                        <td style="padding: 0 10px;">
+                            <a href="${links1 || '#'}" target="_blank" style="text-decoration:none;">
+                                <img src="${iconsrc1}" style="cursor:pointer;${styleString1};" alt="icon1"/>
+                            </a>
+                        </td>
+                        <td style="padding: 0 10px;">
+                            <a href="${links2 || '#'}" target="_blank" style="text-decoration:none;">
+                                <img src="${iconsrc2}" style="cursor:pointer;${styleString2};" alt="icon2"/>
+                            </a>
+                        </td>
+                        <td style="padding: 0 12px;">
+                        <a href="${links3 || '#'}" target="_blank" style="text-decoration:none;">
+                            <img src="${iconsrc3}" style="cursor:pointer;${styleString3};" alt="icon3"/>
+                        </a>
+                    </td>
+                     <td style="padding: 0 10px;">
+                        <a href="${links4 || '#'}" target="_blank" style="text-decoration:none;">
+                            <img src="${iconsrc4}" style="cursor:pointer;${styleString4};" alt="icon3"/>
+                        </a>
+                    </td>                     
+                  </tr>
+                </table>
+            </td>
+        </tr>
+    </table>`;
+
+        case 'link-image':
+          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+        <a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>
+        </div>`;
+
+        case 'multi-image':
+          return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
+          <tr>
+              <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                  <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
+                  <a class="img-btn" href="${link1}" target="_blank" style="${stylebuttonString1}; display:inline-block; padding:12px 25px; text-decoration:none;">
+                      ${content1}
+                  </a>
+              </td>
+              <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
+                  <img src="${src2}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover;${styleString}" alt="image"/>
+                  <a class="img-btn" href="${link2}" target="_blank" style="${stylebuttonString2}; display:inline-block; padding:12px 25px; text-decoration:none;">
+                      ${content2}
+                  </a>
+              </td>
+          </tr>
+        </table>`;
         case 'head':
           return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
         case 'para':
           return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
         case 'button':
           return `<div style="margin:20px auto 0 auto;text-align:center;">
-                    <a href = "${link}"
-                    target = "_blank"
-                    style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
-                      ${content}
-                    </a>
-                  </div>`;
+                  <a href = "${link}"
+                  target = "_blank"
+                  style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
+                    ${content}
+                  </a>
+                </div>`;
         default:
           return '';
       }
@@ -549,24 +885,50 @@ if (email.includes("gmail")) {
           <head>
             <style>
               body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+              
+             .img-case {
+  margin:0 auto !important;
+  text-align:center !important;
+  display:block;
+  width:100%;
+  max-width: 650px; /* Adjust as needed */
+}
+
+.img-case img {
+  display: block;
+  margin: 0 auto; /* Ensures the image is centered */
+  max-width: 100%;
+  height: auto; /* Ensures the image maintains its aspect ratio */
+}
+           
+
               @media(max-width:768px) {
                 .main { width: 330px !important; }
+                .img-case { width: 330px !important; }
+
                 .para{
                   font-size:15px !important;
                 }
-                 
-                
-  /* Keep images inline on small screens */
-  table tr {
+                .img-para{
+                  font-size:12px !important;
+                }
+                  .image-text tr{
     display: flex !important;
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
   }
-  table tr td {
+                
+  /* Keep images inline on small screens */
+  .multi tr {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+  .multi tr td {
     width: 48% !important; /* Ensures images stay side by side */
     padding: 5px !important;
   }
-  table tr td img {
+  .multi tr td img {
     height: 150px !important; /* Adjust image height for better fit */
     width: 100% !important;
     object-fit: cover !important;

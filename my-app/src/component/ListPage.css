@@ -13,7 +13,7 @@
 }
 
 .editbtn {
-    background-color:green;
+    background-color: green;
     color: white;
     padding: 8px 10px;
     border: none;
@@ -68,7 +68,7 @@
     width: 900px;
     height: 500px;
     max-width: 90%;
-    overflow-y:auto;
+    overflow-y: auto;
     position: relative;
 
 }
@@ -98,13 +98,15 @@
     border-radius: 4px;
     margin: 5px;
 }
-.view-btn{
+
+.view-btn {
     width: auto !important;
 }
 
 .btn:hover {
     background-color: #292b74;
 }
+
 .btn-ref {
     background-color: #2f327d;
     color: white;
@@ -201,6 +203,7 @@ select {
 .edit-form h3 {
     margin-top: 10px;
 }
+
 .deleting-toast {
     position: fixed;
     top: 10px;

@@ -29,6 +29,7 @@
 .button-group {
     margin-top: 10px;
 }
+
 .para-btn {
     background-color: #2f327d;
     color: white;
@@ -40,17 +41,18 @@
     margin-right: 10px;
     margin-bottom: 10px;
 }
-.select-variable-para{
-    width:180px;
-    height:40px;
+
+.select-variable-para {
+    width: 180px;
+    height: 40px;
     background-color: #2f327d;
-    color:white;
+    color: white;
     outline: none;
 }
-.select-variable-para option{
-     background-color: #fdffff;
-     color:black;
-     padding:10px 0px;
-     font-size: 16px;
-}
 
+.select-variable-para option {
+    background-color: #fdffff;
+    color: black;
+    padding: 10px 0px;
+    font-size: 16px;
+}

@@ -13,6 +13,7 @@
     font-size: 25px;
 
 }
+
 .admin-dashboard-heading {
     padding-top: 20px;
     color: #2f327d;
@@ -20,20 +21,22 @@
     text-align: center;
 
 }
-.admin-nav{
+
+.admin-nav {
     display: flex;
     justify-content: space-between;
-     background-color: #f8f9fa;
-     font-weight: bold;
-     padding: 20px 10px;
-     margin:0px;
+    background-color: #e6ddfe;
+    font-weight: bold;
+    padding: 20px 10px;
+    margin: 0px;
 }
-.admin-nav-icons{
+
+.admin-nav-icons {
     padding-top: 4px !important;
 }
 
 .admin-nav-button {
-    background-color:#2f327d;
+    background-color: #2f327d;
     display: flex;
     gap: 5px;
     align-items: center !important;
@@ -43,7 +46,7 @@
     outline: none !important;
     align-items: center;
     cursor: pointer;
-    width:120px;
+    width: 120px;
     height: 45px;
     font-size: 15px;
     border-radius: 25px;
@@ -54,15 +57,17 @@
 .admin-dashboard-table {
     width: 95%;
     border-collapse: collapse;
-    margin:20px auto;
+    margin: 20px auto;
     background: #ffffff;
     border-radius: 8px;
     /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
 }
+
 .admin-scroll {
     height: 550px !important;
     overflow: auto;
 }
+
 .admin-dashboard-table th {
     text-align: center;
     padding: 1rem;
@@ -70,7 +75,7 @@
 }
 
 .admin-dashboard-table td {
-    text-align:center;
+    text-align: center;
     padding: 1rem;
     border-bottom: 1px solid #dee2e6;
 }

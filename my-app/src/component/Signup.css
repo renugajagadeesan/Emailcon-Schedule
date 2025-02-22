@@ -14,6 +14,7 @@
     background: #fff;
     width: 100%;
     height: 100vh !important;
+
     /* border-radius: 15px; */
     /* animation: signupFadeIn 0.8s ease-in-out; */
     /* box-shadow:0 0 5px rgb(62, 61, 61) */
@@ -33,7 +34,8 @@
     background-color: #faeedf;
     display: block;
     width: 55%;
-    /* padding: 50px 0px; */
+    padding: 20px 0px;
+    height: 100vh !important;
     align-content: center;
     text-align: center;
     /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px; */
@@ -47,7 +49,7 @@
 .signup-container {
     background: #fff;
     width: 45%;
-    padding: 0.5rem 2rem;
+    padding: 0.6rem 2rem;
     /* border-top-right-radius: 15px;
     border-bottom-right-radius: 15px; */
 }
@@ -55,7 +57,7 @@
 .signup-header {
     text-align: center;
     margin-bottom: 1rem;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: #2f327D;
 }
 
@@ -81,7 +83,7 @@
 
 .label {
     font-size: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: 300;
     color: #616161 !important;
 }
@@ -184,7 +186,7 @@
     /* margin-bottom: 20px; */
     width: 100%;
     padding: 0.6rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     border: 1px solid #c2c1c1 !important;
     border-radius: 4px;
     font-size: 1rem;
@@ -217,11 +219,7 @@
 .signup-button {
     background-color: #f48c06;
     color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: 0.3s;
+
 }
 
 .signup-button:disabled {

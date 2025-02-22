@@ -1,8 +1,8 @@
 /* General Styles */
 .admin-login-page {
     display: flex;
-     justify-content: center;
-     align-items: center;
+    justify-content: center;
+    align-items: center;
     margin: 0;
     padding: 0;
     background-color: #f2fbfc;
@@ -26,7 +26,7 @@
 }
 
 .admin-login-container {
-    padding-top:10% !important;
+    padding-top: 10% !important;
     background: #fff;
     width: 45%;
     padding: 2rem;
@@ -67,14 +67,14 @@
 
 /* Button Styles */
 .admin-login-button {
-       padding:8px 40px;
-       border: none;
-       border-radius: 20px;
-       font-size: 16px;
-       font-weight: 500;
-       cursor: pointer;
-       margin: 10px 0px;
-       transition: background 0.3s ease;
+    padding: 8px 40px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin: 10px 0px;
+    transition: background 0.3s ease;
 }
 
 
@@ -89,7 +89,7 @@
     justify-content: center
 }
 
-.Admin-submit button{
+.Admin-submit button {
     background: #ffa734;
     color: #fff;
 }

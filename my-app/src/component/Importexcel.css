@@ -95,6 +95,7 @@
     border-radius: 4px;
     width: 95%;
 }
+
 .btn-download-sample {
     padding: 10px 15px;
     background-color: #2f327d;
@@ -113,6 +114,7 @@
     margin-bottom: 10px;
     font-weight: bold;
 }
+
 .switch {
     position: relative;
     display: inline-block;

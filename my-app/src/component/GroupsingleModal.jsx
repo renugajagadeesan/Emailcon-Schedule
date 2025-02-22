@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./GroupModal.css";
@@ -45,7 +45,6 @@ const GroupsingleModal = ({ onClose }) => {
 
     fetchGroups();
   }, [user, navigate]); // Ensure useEffect is dependent on `user` and `navigate`
-
 
   const handleManualStudentSave = () => {
     if (selectedGroupForManual) {

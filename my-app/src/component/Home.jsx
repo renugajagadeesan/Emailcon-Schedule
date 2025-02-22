@@ -1,43 +1,49 @@
-
-import React, { useState , useEffect } from 'react';
-import {FaFileAlt, FaHistory, FaUserPlus, FaEye,FaUser,FaUsers} from 'react-icons/fa';
-import './Home.css';
+import React, { useState, useEffect } from "react";
+import {
+  FaFileAlt,
+  FaHistory,
+  FaUserPlus,
+  FaEye,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
+import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import apiConfig from "../apiconfig/apiConfig.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SendbulkModal from './SendbulkModal.jsx';
-import GroupsingleModal from './GroupsingleModal';
-import GroupfileModal from './GroupfileModal';
-import GroupModalnew from './GroupModalnew.jsx';
-import ListPage from './ListPage.jsx';
-import { FaRegClipboard,FaTimes } from "react-icons/fa";
+import SendbulkModal from "./SendbulkModal.jsx";
+import GroupsingleModal from "./GroupsingleModal";
+import GroupfileModal from "./GroupfileModal";
+import GroupModalnew from "./GroupModalnew.jsx";
+import ListPage from "./ListPage.jsx";
+import { FaRegClipboard, FaTimes } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { FaAddressBook } from "react-icons/fa";
-import { FaUserCircle} from "react-icons/fa";
-import {MdWavingHand} from "react-icons/md";
+import { FaUserCircle } from "react-icons/fa";
+import { MdWavingHand } from "react-icons/md";
 import imghome from "../Images/home-sidebar.jpg";
 import welcomeimg from "../Images/welcome.png";
 
 const Home = () => {
   const [view, setView] = useState("main");
- const [showCampaignModal, setShowCampaignModal] = useState(false);
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
   const [campaignName, setCampaignName] = useState("");
-const [showsingleGroupModal, setShowsingleGroupModal] = useState(false);
-const [showfileGroupModal, setShowfileGroupModal] = useState(false);
+  const [showsingleGroupModal, setShowsingleGroupModal] = useState(false);
+  const [showfileGroupModal, setShowfileGroupModal] = useState(false);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
-    const [showListPageModal, setShowListPageModal] = useState(false);
-       const [showPopup, setShowPopup] = useState(false);
-         const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showListPageModal, setShowListPageModal] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const navigate=useNavigate();
- const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
-useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate("/signup");
-      toast.warning("Signup first to access Homepage")
+      toast.warning("Signup first to access Homepage");
     } else {
       const modalShown = localStorage.getItem("modalShown");
       if (!modalShown) {
@@ -47,7 +53,7 @@ useEffect(() => {
     }
   }, [user, navigate]);
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("modalShown"); // Reset modalShown for next login
@@ -68,7 +74,7 @@ useEffect(() => {
   const handleContactView = () => {
     setView("contact");
   };
- const handleCreateContactView = () => {
+  const handleCreateContactView = () => {
     setView("create-contact");
   };
 
@@ -80,51 +86,56 @@ useEffect(() => {
     setShowCampaignModal(true);
   };
 
-  const handleviewcontacts=()=>{
+  const handleviewcontacts = () => {
     setShowListPageModal(true);
-  }
+  };
 
-  const handleaddSinglecontacts=() => {
+  const handleaddSinglecontacts = () => {
     setShowsingleGroupModal(true);
   };
 
-  const handleaddfilecontacts=() => {
-   setShowfileGroupModal(true);
+  const handleaddfilecontacts = () => {
+    setShowfileGroupModal(true);
   };
 
-
   const handleCreateButton = () => {
-  if (!user || !user.id) {
-    toast.error("Please ensure the user is valid");
-    return; // Stop further execution if user is invalid
-  }
+    if (!user || !user.id) {
+      toast.error("Please ensure the user is valid");
+      return; // Stop further execution if user is invalid
+    }
 
-  if (campaignName && user && user.id) {
-    axios
-      .post(`${apiConfig.baseURL}/api/stud/campaign`, { camname: campaignName, userId: user.id })
-      .then((response) => {
-        // console.log(response.data);
-        localStorage.setItem("campaign", JSON.stringify(response.data.campaign));
-        toast.success("Campaign created")
-        setTimeout(()=>{
-        setShowCampaignModal(false);
-        setCampaignName("");
-        },(4000))
-         setTimeout(()=>{
-        navigate('/editor');
-        },(3000))
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        toast.error("Failed to create campaign");
-      });
-  } else {
-    toast.error("Please ensure all fields are filled and user is valid");
-  }
-};
-const handlecampaignhistory=()=>{
-    navigate('/campaigntable')
-}
+    if (campaignName && user && user.id) {
+      axios
+        .post(`${apiConfig.baseURL}/api/stud/campaign`, {
+          camname: campaignName,
+          userId: user.id,
+        })
+        .then((response) => {
+          // console.log(response.data);
+          localStorage.setItem(
+            "campaign",
+            JSON.stringify(response.data.campaign)
+          );
+          toast.success("Campaign created");
+          setTimeout(() => {
+            setShowCampaignModal(false);
+            setCampaignName("");
+          }, 4000);
+          setTimeout(() => {
+            navigate("/editor");
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error("Failed to create campaign");
+        });
+    } else {
+      toast.error("Please ensure all fields are filled and user is valid");
+    }
+  };
+  const handlecampaignhistory = () => {
+    navigate("/campaigntable");
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -135,24 +146,24 @@ const handlecampaignhistory=()=>{
       {/* Sidebar */}
       <div className="sidebar">
         <div>
-        <h2 className="sidebar-title" onClick={handleMainView}>
-          Email<span style={{ color: "#f48c06" }}>Con</span>
-        </h2>
-        <button
-          className="sidebar-button campaign-button"
-          onClick={handleCampaignView}
-        >
-          Campaign
-        </button>
-        <button
-          className="sidebar-button contact-button"
-          onClick={handleContactView}
-        >
-          Contact
-        </button>
+          <h2 className="sidebar-title" onClick={handleMainView}>
+            Email<span style={{ color: "#f48c06" }}>Con</span>
+          </h2>
+          <button
+            className="sidebar-button campaign-button"
+            onClick={handleCampaignView}
+          >
+            Campaign
+          </button>
+          <button
+            className="sidebar-button contact-button"
+            onClick={handleContactView}
+          >
+            Contact
+          </button>
         </div>
-        <div className='side-img'>
-        <img src={imghome} alt="Home img" className="home-image"/>
+        <div className="side-img">
+          <img src={imghome} alt="Home img" className="home-image" />
         </div>
       </div>
 
@@ -163,11 +174,19 @@ const handlecampaignhistory=()=>{
           <div className="nav-split">
             <h4>
               <span
-                style={{ transform: "scaleX(-1)", display: "inline-block",color:"gold",marginRight:"5px" }}
+                style={{
+                  transform: "scaleX(-1)",
+                  display: "inline-block",
+                  color: "gold",
+                  marginRight: "5px",
+                }}
               >
                 <MdWavingHand size={17} />
               </span>{" "}
-              Hey <span style={{ color: "#f48c06" }}>{user?.username || "Guest"}</span>
+              Hey{" "}
+              <span style={{ color: "#f48c06" }}>
+                {user?.username || "Guest"}
+              </span>
             </h4>
             <div className="profile-container">
               <button onClick={toggleDropdown} className="profile-button">
@@ -178,10 +197,7 @@ const handlecampaignhistory=()=>{
                   <button onClick={handleLogout} className="dropdown-item">
                     <span>Logout </span>
                     <span>
-                      <FaSignOutAlt
-                        color="#f48c06"
-                        fontSize="15px"
-                      />
+                      <FaSignOutAlt color="#f48c06" fontSize="15px" />
                     </span>
                   </button>
                 </div>
@@ -272,9 +288,8 @@ const handlecampaignhistory=()=>{
           <ListPage onClose={() => setShowListPageModal(false)} />
         )}
         {/* welcome popup */}
-                {showPopup && (
-
-       <div className="home-overlay overlay">
+        {showPopup && (
+          <div className="home-overlay overlay">
             <div className="home-modal">
               {/* {showConfetti && <Confetti width={500} height={500} />} */}
               <div className="confetti-wrapper">
@@ -285,8 +300,8 @@ const handlecampaignhistory=()=>{
               {/* <button className="home-close-button" onClick={closePopup}>
                 ✕
               </button> */}
-              <button className="welcome-close-button"onClick={closePopup}>
-            <FaTimes className="text-red-500 cursor-pointer" />
+              <button className="welcome-close-button" onClick={closePopup}>
+                <FaTimes className="text-red-500 cursor-pointer" />
               </button>
               <img
                 src={welcomeimg}
@@ -294,13 +309,13 @@ const handlecampaignhistory=()=>{
                 className="celebration-icon"
               />
               <h2>Welcome on board, {user.username}!</h2>
-               <p>Explore the features and manage your groups efficiently.</p>
-                <button className="welcome-button" onClick={closePopup}>
+              <p>Explore the features and manage your groups efficiently.</p>
+              <button className="welcome-button" onClick={closePopup}>
                 Let's go!
               </button>
             </div>
           </div>
-                )}
+        )}
 
         {/* Modal for Creating Campaign */}
         {showCampaignModal && (

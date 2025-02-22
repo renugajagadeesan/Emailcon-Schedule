@@ -13,7 +13,7 @@
     /* align-items:center; */
     position: sticky;
     margin: 0 auto;
-    top: 5%;
+    top: 18%;
     overflow-y: auto;
 }
 
@@ -283,7 +283,7 @@ button[data-tooltip]:hover::after {
     margin-bottom: 10px;
     display: flex;
     gap: 10px;
-    padding: 5px;
+    padding: 10px;
     background-color: transparent !important;
     width: 100%;
 
@@ -323,6 +323,7 @@ button[data-tooltip]:hover::after {
     justify-content: center;
     align-items: center;
 }
+
 .testmail-content {
     background-color: white;
     padding: 30px 20px 20px 20px !important;
@@ -449,13 +450,13 @@ button[data-tooltip]:hover::after {
 
 .img {
     width: 100% !important;
-    height: auto;
+    height: auto !important;
     margin: 0 auto;
     text-align: center;
 }
 
 .logo {
-    width: 30% !important;
+    width: 100% !important;
     height: auto !important;
     margin: 0 auto;
     text-align: center;
@@ -612,7 +613,7 @@ button[data-tooltip]:hover::after {
 
 /* Open Modal Button */
 .open-modal-btn {
-    background-color:#3f4192;
+    background-color: #3f4192;
     color: white;
     padding: 12px 18px;
     border: none;
@@ -623,7 +624,7 @@ button[data-tooltip]:hover::after {
 }
 
 .open-modal-btn:hover {
-    background-color:#212366;
+    background-color: #212366;
 }
 
 /* Modal Overlay */
@@ -701,4 +702,73 @@ button[data-tooltip]:hover::after {
 
 .close-btn-send:hover {
     background-color: #2f327D;
+}
+
+
+.image-text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 20px 10px 10px;
+}
+
+.image-text-wrapper {
+    display: flex;
+    height: 200px !important;
+    align-items: center;
+    gap: 15px;
+    padding: 8px 10px;
+}
+
+.image-item {
+    width: 190px !important;
+    height: auto;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.text-item {
+    height: 180px !important;
+    max-height: 190px !important;
+    overflow: auto;
+    padding: 5px;
+
+}
+
+.video-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.videoimg {
+    /* width: 400px; */
+    cursor: pointer;
+    /* margin: 0 auto; */
+    /* height: 300px; */
+    text-align: center;
+
+}
+
+.video-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: white;
+    transform: translate(-50%, -50%);
+}
+
+.icon-containers {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.icon-containers .icon {
+    cursor: pointer;
 }

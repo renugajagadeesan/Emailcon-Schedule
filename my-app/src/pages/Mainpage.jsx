@@ -3,7 +3,14 @@ import axios from "axios";
 import "./Mainpage.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaParagraph, FaImage, FaHeading, FaPlusSquare } from "react-icons/fa";
+import {
+  FaParagraph,
+  FaImage,
+  FaHeading,
+  FaPlusSquare,
+  FaGlobe,
+  FaVideo,
+} from "react-icons/fa";
 import { FaUser, FaUsers, FaRocket } from "react-icons/fa"; // Import icons
 import { MdSend } from "react-icons/md";
 import { FaDesktop } from "react-icons/fa";
@@ -17,6 +24,10 @@ import SendbulkModal from "../component/SendbulkModal.jsx";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import apiConfig from "../apiconfig/apiConfig.js";
+// import facebook from "../Images/facebook.png";
+// import twitter from "../Images/twitter.png";
+// import instagram from "../Images/instagram.png";
+// import youtube from "../Images/youtube.png";
 
 const Mainpage = () => {
   const [isLoading, setIsLoading] = useState(false); // State for loader
@@ -31,6 +42,7 @@ const Mainpage = () => {
     scheduledTime: "",
   });
   const [selectedIndex, setSelectedIndex] = useState(null); // Track selected content index
+  const [modalIndex, setModalIndex] = useState(null);
   const dragIndex = useRef(null);
   const [undoStack, setUndoStack] = useState([]);
   const [redoStack, setRedoStack] = useState([]);
@@ -46,13 +58,9 @@ const Mainpage = () => {
   const modalRef = useRef(null);
   // const [scheduledMessage, setScheduledMessage] = useState("");
 
-
   const handlebackcampaign = () => {
     navigate("/home");
   };
-
-
-
 
   // Add new text
   const addText = () => {
@@ -68,6 +76,7 @@ const Mainpage = () => {
           borderRadius: "10px",
           textAlign: "left",
           color: "#000000",
+          backgroundColor: "#f4f4f4",
           padding: "10px 10px",
         },
       },
@@ -122,6 +131,7 @@ const Mainpage = () => {
               height: "auto",
               borderRadius: "10px",
               textAlign: "center",
+              margin: "5px auto",
             },
           },
         ]);
@@ -157,11 +167,11 @@ const Mainpage = () => {
             type: "logo",
             src: imageUrl,
             style: {
-              width: "100%",
+              width: "50%",
               height: "auto",
-              borderRadius: "10px",
+              borderRadius: "0px",
               textAlign: "center",
-              margin: "0 auto",
+              margin: "5px auto",
             },
           },
         ]);
@@ -240,6 +250,7 @@ const Mainpage = () => {
               height: "auto",
               borderRadius: "10px",
               textAlign: "center",
+              margin: "5px auto",
             },
             link: "https://www.imageconindia.com/",
           },
@@ -251,7 +262,101 @@ const Mainpage = () => {
     fileInput.click();
   };
 
-//add multimage with button
+  const addImageText = () => {
+    setPreviewContent([
+      ...previewContent,
+      {
+        type: "imagewithtext",
+        src1: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjCoUtOal33JWLqals1Wq7p6GGCnr3o-lwpQ&s", // Default image source
+        content1:
+          "Artificial intelligence is transforming the way we interact with technology, enabling machines to process data with efficiency.", // Default paragraph text
+        style1: {
+          color: "black",
+          borderRadius: "10px",
+          backgroundColor: "#f4f4f4",
+        },
+      },
+    ]);
+  };
+
+  const addTextImage = () => {
+    setPreviewContent([
+      ...previewContent,
+      {
+        type: "textwithimage",
+        src2: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjCoUtOal33JWLqals1Wq7p6GGCnr3o-lwpQ&s", // Default image source
+        content2:
+          "Artificial intelligence is transforming the way we interact with technology, enabling machines to process data with efficiency.", // Default paragraph text
+        style: {
+          color: "black",
+          backgroundColor: "#f4f4f4",
+          borderRadius: "10px",
+        },
+      },
+    ]);
+  };
+
+  //add video with icon
+  const addVideo = () => {
+    setPreviewContent([
+      ...previewContent,
+      {
+        type: "video-icon",
+        src1: "https://zawiya.org/wp-content/themes/zawiyah/images/thumbnail-default.jpg",
+        src2: "https://i.ibb.co/Ngg9QVdM/output-onlinegiftools.gif",
+        link: "https://www.imageconindia.com/",
+        style: {
+          width: "100%",
+          height: "350px",
+          borderRadius: "10px",
+          textAlign: "center",
+          margin: "5px auto",
+        },
+      },
+    ]);
+  };
+
+  const addSocialMedia = () => {
+    setPreviewContent([
+      ...previewContent,
+      {
+        type: "icons",
+        iconsrc1:
+          "https://media-hosting.imagekit.io//67bd5de7d7284435/facebook.png?Expires=1834659823&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Q3MgNGs1Jso~sjt298M6H-vs8QWdp~OxEKGNi1BF1Wq3uJwZqz2NeeW1BSNFKjYNxGR4otU8ssEUvdJ9TJMsbGUs6S1dxJiJ6ln3gxasE5ir4yXdWf1~fm-yQdE9F7Bssys1mf1aDBJjDG0ro7pHSILRd1v7eN~KS6VItz1k7kNejlwi84h0X6pjeIy5Lh7Zhilmc2ON5XD2Zio9oQa1OUJhj2D9ZXxR84ubLtUY4dmiESDaLtsUX0Gjvm6R0nXMkRL0oIxuIsgxi3JnmjesQgldTr4s9AIsgDmYy24DGbuaLji3epak-9fG0lyxZyyLQYfYmt8Wq-0PN0QDs2yQkQ__",
+        style1: { width: "30px", height: "30px" },
+        links1: "https://www.facebook.com",
+
+        iconsrc2:
+          "https://media-hosting.imagekit.io//29eaf64e0e144a39/twitter.png?Expires=1834659855&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=tMMasC4XY4z4xl3DzTIcSSXTBBH-eMULL3w0WH5nHGsu0zVlz8~HLSw5nfiw2iBgB~J4QPle2LM4ow1aPq0x2cCUvAHLQ8IG9P5-KSV0Em2C1eZuXFaScWasYxeX9OAV1uIRBBvQxvId20IbNK7c9eBBUy12Htg2rjE2p8zCtqhwy5Ef6AqOogF3G7FcKpY8-DMNLKVrsagHuhP2R7m9gndSODhxsfSp17lW4R0wgo73IZicToB~U1mdlNOe2I7WKXGV3znS3u0P9NYdU4KR7DLmGX7NhEQaSQ1rF7yN6lL8tZHfPNoBCh50CbkuM16wf6qCcrHlcta1sPjlgfhTdg__",
+        style2: { width: "55px", height: "55px" },
+        links2: "https://www.twitter.com",
+
+        iconsrc3:
+          "https://media-hosting.imagekit.io//cfa67b595a694323/instagram.png?Expires=1834659862&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=F~x667oLkHSCCRT94amSjjg-7YvZGcUgYUBAOS8PyHS6fKhyxIg1BNFqgBrI-Wfibxvg9Ju~S4TxBkdF~PAhJqW4skqoNoWnadypcOGEWQnsK4Vt34cegUPk1WkeIWFz2twm1ase7PsFMgZFHQPYmH5iZsMlCSvkwyAnIhLOJHcKuUz6YeI8wAhCAvI7mZp4oLbICW08nHqJIhfrP5h4tYZ74PHgw5Z6NGeRrXMHph~itymPichKycdyv92m~3EozEAo~qrXeuF0hbU1H2hEeTqbiQU1dnDJXlA~Nq6r1QtFhJXMoSYv7Tw~qoQqyUZqwQw8cQ7XjSBrW0-fMXq6GA__",
+        style3: { width: "30px", height: "30px" },
+        links3: "https://www.instagram.com",
+
+        iconsrc4:
+          "https://media-hosting.imagekit.io//24a0e8c0dfbd44da/youtube.png?Expires=1834659634&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=hKVEIuwIlua~7-1jjd~A0vSiyD9UYbdSHvQHs7nUNyetORS16hhvkxUSuQdkxNmmx~2h3JRNia3qZamzljVLCTlEiqF9OofWaXvenvzpF3tp3SkHei8WjQ5ZJdLT~YMgRgANJz7rYArnQugBukzmkHbg57GNJFTNrShLyFkSepwDlLG6nbo7qdPPmDNDyAbwhIlReMOgAnU7Mb1FsBd98TXbImb8hyiiUsM2zgTK0eEwGM1llYJlavFgrvwPbMenHEf37N~I56Z7H9ZUEPXmpZpJGIJONVVOkld~TuzfWLa52ogLEKb8ugc9gMrKJVdnL4fdrUoj7fyT~aWVxugQ0A__",
+        style4: { width: "30px", height: "30px" },
+        links4: "https://www.youtube.com",
+
+        ContentStyle: {
+          width: "100%",
+          backgroundColor: "white",
+          borderRadius: "10px",
+          textAlign: "center",
+        },
+      },
+    ]);
+  };
+  const handleLinksClick2 = (e, link) => {
+    if (link) {
+      window.open(link.startsWith("http") ? link : `http://${link}`, "_blank");
+    }
+  };
+
+  //add multimage with button
   const addMultiImage = () => {
     setPreviewContent([
       ...previewContent,
@@ -293,7 +398,6 @@ const Mainpage = () => {
     ]);
   };
 
-
   const addButton = () => {
     saveToUndoStack(); // Save the current state before deleting
     setPreviewContent([
@@ -317,7 +421,6 @@ const Mainpage = () => {
   };
 
   // Handle content editing
-
   const updateContent = (index, newContent) => {
     saveToUndoStack(); // Save the current state before deleting
     const updated = [...previewContent];
@@ -363,37 +466,32 @@ const Mainpage = () => {
     }
   };
 
-
-
   //Schedule send Email
-const sendscheduleEmail = async () => {
-//  const scheduleTime = new Date(emailData.scheduledTime);
-// const currentTime = new Date();
-// const delay = scheduleTime.getTime() - currentTime.getTime();
+  const sendscheduleEmail = async () => {
+    // Validate required fields
+    if (!previewContent || previewContent.length === 0) {
+      toast.warning("No preview content available.");
+      return;
+    }
+    if (
+      !emailData ||
+      !emailData.recipient ||
+      !emailData.subject ||
+      !emailData.previewtext ||
+      !emailData.scheduledTime
+    ) {
+      toast.warning("Please fill in all required fields.");
+      return;
+    }
+    setIsLoadingsch(true);
 
-// if (delay > 0) {
-//     const formattedScheduleTime = scheduleTime.toUTCString(); // Ensure correct format
-//     setScheduledMessage(`Email scheduled for ${formattedScheduleTime}`);
-// } else {
-//     setScheduledMessage("Please select a future date and time.");
-// }
+    try {
+      let recipients = emailData.recipient
+        .split(",")
+        .map((email) => email.trim());
 
-// Validate required fields
-if (!previewContent || previewContent.length === 0) {
-    toast.warning("No preview content available.");
-    return;
-}
-if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previewtext || !emailData.scheduledTime) {
-    toast.warning("Please fill in all required fields.");
-    return;
-}
-setIsLoadingsch(true);
-
-try {
-    let recipients = emailData.recipient.split(",").map(email => email.trim());
-
-    // Store campaign history with "scheduled" status in UTC format
-    const campaignHistoryData = {
+      // Store campaign history with "scheduled" status in UTC format
+      const campaignHistoryData = {
         campaignname: campaign.camname,
         groupname: "No Group",
         totalcount: recipients.length,
@@ -406,122 +504,137 @@ try {
         previewtext: emailData.previewtext,
         previewContent,
         bgColor,
-        exceldata:[{}],
+        exceldata: [{}],
         status: "Scheduled On",
-        scheduledTime: new Date(emailData.scheduledTime).toISOString(),  
+        scheduledTime: new Date(emailData.scheduledTime).toISOString(),
         senddate: new Date().toLocaleString(),
         user: user.id,
         groupId: "no group",
-    };
+      };
 
-    const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
+      const campaignResponse = await axios.post(
+        `${apiConfig.baseURL}/api/stud/camhistory`,
+        campaignHistoryData
+      );
 
-        console.log("Initial Campaign History Saved:", campaignResponse.data);     
-        localStorage.setItem("camhistory", JSON.stringify(campaignResponse.data));
-        toast.success("Email scheduled successfully!");
-        navigate("/home");
-   } catch (error) {
-        console.error("Error scheduling email:", error);
-        toast.error("Failed to schedule email.");
+      console.log("Initial Campaign History Saved:", campaignResponse.data);
+      localStorage.setItem("camhistory", JSON.stringify(campaignResponse.data));
+      toast.success("Email scheduled successfully!");
+      navigate("/home");
+    } catch (error) {
+      console.error("Error scheduling email:", error);
+      toast.error("Failed to schedule email.");
     } finally {
-        setIsLoadingsch(false);
+      setIsLoadingsch(false);
     }
-};
-
+  };
 
   //Normal Send Email
-const sendEmail = async () => {
-
+  const sendEmail = async () => {
     // Validate required fields
     if (!previewContent || previewContent.length === 0) {
-        toast.warning("No preview content available.");
-        return;
+      toast.warning("No preview content available.");
+      return;
     }
-    if (!emailData || !emailData.recipient || !emailData.subject || !emailData.previewtext) {
-        toast.warning("Please fill in all required fields.");
-        return;
+    if (
+      !emailData ||
+      !emailData.recipient ||
+      !emailData.subject ||
+      !emailData.previewtext
+    ) {
+      toast.warning("Please fill in all required fields.");
+      return;
     }
-        setIsLoading(true);
-        navigate("/home");
-
+    setIsLoading(true);
+    navigate("/home");
 
     try {
-      
-        let recipients = emailData.recipient.split(",").map(email => email.trim());
-        let sentEmails = [];
-        let failedEmails = [];
+      let recipients = emailData.recipient
+        .split(",")
+        .map((email) => email.trim());
+      let sentEmails = [];
+      let failedEmails = [];
 
-        // Store initial campaign history with "Pending" status
-        const campaignHistoryData = {
-            campaignname: campaign.camname,
-            groupname: "No Group",
-            totalcount: recipients.length,
-            recipients:"no mail",
-            sendcount: 0,
-            failedcount: 0,
-            sendEmails:0,
-            failedEmails:0,
-            subject:emailData.subject,
-            previewtext:emailData.previewtext,
-            previewContent,bgColor,
-            exceldata:[{}],
-            scheduledTime:new Date(),
-            status: "Pending",
-            senddate: new Date().toLocaleString(),
-            user: user.id,
-            groupId:"no group",
-        };
+      // Store initial campaign history with "Pending" status
+      const campaignHistoryData = {
+        campaignname: campaign.camname,
+        groupname: "No Group",
+        totalcount: recipients.length,
+        recipients: "no mail",
+        sendcount: 0,
+        failedcount: 0,
+        sendEmails: 0,
+        failedEmails: 0,
+        subject: emailData.subject,
+        previewtext: emailData.previewtext,
+        previewContent,
+        bgColor,
+        exceldata: [{}],
+        scheduledTime: new Date(),
+        status: "Pending",
+        senddate: new Date().toLocaleString(),
+        user: user.id,
+        groupId: "no group",
+      };
 
-        const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
-        const campaignId = campaignResponse.data.id; // Assume response includes campaign ID
-        console.log("Initial Campaign History Saved:", campaignResponse.data);
+      const campaignResponse = await axios.post(
+        `${apiConfig.baseURL}/api/stud/camhistory`,
+        campaignHistoryData
+      );
+      const campaignId = campaignResponse.data.id; // Assume response includes campaign ID
+      console.log("Initial Campaign History Saved:", campaignResponse.data);
 
-        // Start sending emails
-        await Promise.all(recipients.map(async (email) => {
-            try {
-                const response = await axios.post(`${apiConfig.baseURL}/api/stud/sendtestmail`, {
-                    emailData: {
-                        ...emailData,
-                        recipient: email
-                    },
-                    previewContent,
-                    bgColor,
-                    userId: user.id,
-                });
+      // Start sending emails
+      await Promise.all(
+        recipients.map(async (email) => {
+          try {
+            const response = await axios.post(
+              `${apiConfig.baseURL}/api/stud/sendtestmail`,
+              {
+                emailData: {
+                  ...emailData,
+                  recipient: email,
+                },
+                previewContent,
+                bgColor,
+                userId: user.id,
+              }
+            );
 
-                if (response.status === 200) {
-                    sentEmails.push(email);
-                } else {
-                    console.error(`Failed to send email to ${email}:`, response);
-                    failedEmails.push(email);
-                }
-            } catch (err) {
-                console.error(`Error sending email to ${email}:`, err);
-                failedEmails.push(email);
+            if (response.status === 200) {
+              sentEmails.push(email);
+            } else {
+              console.error(`Failed to send email to ${email}:`, response);
+              failedEmails.push(email);
             }
-        }));
+          } catch (err) {
+            console.error(`Error sending email to ${email}:`, err);
+            failedEmails.push(email);
+          }
+        })
+      );
 
-
-        // Update campaign history with final status
-        const finalStatus = failedEmails.length > 0 ? "Failed" : "Success";
-        await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`, {
-            sendcount: sentEmails.length,
-            sentEmails:sentEmails,
-            failedEmails:failedEmails.length > 0 ? failedEmails : 0,
-            failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
-            status: finalStatus,
-        });
-        console.log("status updated:",finalStatus);
-        toast.success("Email sending process completed.");
-
+      // Update campaign history with final status
+      const finalStatus = failedEmails.length > 0 ? "Failed" : "Success";
+      await axios.put(
+        `${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`,
+        {
+          sendcount: sentEmails.length,
+          sentEmails: sentEmails,
+          failedEmails: failedEmails.length > 0 ? failedEmails : 0,
+          failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
+          status: finalStatus,
+        }
+      );
+      console.log("status updated:", finalStatus);
+      toast.success("Email sending process completed.");
     } catch (error) {
-        console.error("Error in sendEmail:", error);
-        toast.error("An error occurred while sending the email.");
+      console.error("Error in sendEmail:", error);
+      toast.error("An error occurred while sending the email.");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
-
+  };
 
   //add variable
   const handleInsertName = (index, name) => {
@@ -566,6 +679,10 @@ const sendEmail = async () => {
     else if (type === "button") addButton();
     else if (type === "multi-image") addMultiImage();
     else if (type === "link-image") addlinkImage();
+    else if (type === "imagewithtext") addImageText();
+    else if (type === "textwithimage") addTextImage();
+    else if (type === "video-icon") addVideo();
+    else if (type === "icons") addSocialMedia();
 
     dragIndex.current = null; // Reset the type after drop
   };
@@ -586,7 +703,8 @@ const sendEmail = async () => {
       <nav className="navbar">
         <div>
           <h3 className="company-name">
-            <span style={{ color: "#2f327D" }}>{campaign.camname}</span> <span style={{ color: "#f48c06" }}>Campaign</span>
+            <span style={{ color: "#2f327D" }}>{campaign.camname}</span>{" "}
+            <span style={{ color: "#f48c06" }}>Campaign</span>
           </h3>
         </div>
         <div>
@@ -701,9 +819,43 @@ const sendEmail = async () => {
                 onClick={addMultiImage}
                 className="editor-button"
                 draggable
-                onDragStart={(e) => handleDragStart("image")}
+                onDragStart={(e) => handleDragStart("multi-image")}
               >
                 <FaImage /> Multi-Image
+              </button>
+
+              <button
+                onClick={addTextImage}
+                className="editor-button"
+                draggable
+                onDragStart={(e) => handleDragStart("textwithimage")}
+              >
+                <FaImage /> Text-Image
+              </button>
+              <button
+                onClick={addImageText}
+                className="editor-button"
+                draggable
+                onDragStart={(e) => handleDragStart("imagewithtext")}
+              >
+                <FaImage /> Image-Text
+              </button>
+
+              <button
+                onClick={addVideo}
+                className="editor-button"
+                onDragStart={(e) => handleDragStart("video-icon")}
+              >
+                <FaVideo />
+                Video
+              </button>
+              <button
+                onClick={addSocialMedia}
+                className="editor-button"
+                onDragStart={(e) => handleDragStart("image")}
+              >
+                <FaGlobe />
+                Social Icons
               </button>
               <button
                 onClick={addButton}
@@ -978,7 +1130,7 @@ const sendEmail = async () => {
                   </>
                 )}
 
-             {/* New Editor for Multi-Image Links and Button Styling */}
+                {/* New Editor for Multi-Image Links and Button Styling */}
                 {previewContent[selectedIndex].type === "multi-image" && (
                   <>
                     <h4>Button-1 Styles</h4>
@@ -1038,27 +1190,27 @@ const sendEmail = async () => {
                             })
                           }
                         />
-                     </div>
+                      </div>
 
-                        <label>Text Alignment:</label>
-                        <select
-                          value={
-                            previewContent[selectedIndex]?.buttonStyle1
-                              ?.textAlign || ""
-                          }
-                          onChange={(e) =>
-                            updateContent(selectedIndex, {
-                              buttonStyle1: {
-                                ...previewContent[selectedIndex].buttonStyle1,
-                                textAlign: e.target.value,
-                              },
-                            })
-                          }
-                        >
-                          <option value="left">Left</option>
-                          <option value="center">Center</option>
-                          <option value="right">Right</option>
-                        </select>
+                      <label>Text Alignment:</label>
+                      <select
+                        value={
+                          previewContent[selectedIndex]?.buttonStyle1
+                            ?.textAlign || ""
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            buttonStyle1: {
+                              ...previewContent[selectedIndex].buttonStyle1,
+                              textAlign: e.target.value,
+                            },
+                          })
+                        }
+                      >
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                      </select>
                       <label>Button Size:</label>
                       <div>
                         <button
@@ -1269,44 +1421,102 @@ const sendEmail = async () => {
                   </>
                 )}
 
+                {previewContent[selectedIndex]?.type === "icons" && (
+                  <>
+                    <div className="editor-bg">
+                      Background Color
+                      <input
+                        type="color"
+                        value={
+                          previewContent[selectedIndex]?.ContentStyle
+                            ?.backgroundColor || "#ffffff"
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            ContentStyle: {
+                              ...previewContent[selectedIndex].ContentStyle,
+                              backgroundColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <label>Link1:</label>
+                    <input
+                      type="text"
+                      placeholder="Enter URL"
+                      value={previewContent[selectedIndex].links1 || ""}
+                      onChange={(e) =>
+                        updateContent(selectedIndex, { links1: e.target.value })
+                      }
+                    />
+
+                    <label>Link2:</label>
+                    <input
+                      type="text"
+                      placeholder="Enter URL"
+                      value={previewContent[selectedIndex].links2 || ""}
+                      onChange={(e) =>
+                        updateContent(selectedIndex, { links2: e.target.value })
+                      }
+                    />
+
+                    <label>Link3:</label>
+                    <input
+                      type="text"
+                      placeholder="Enter URL"
+                      value={previewContent[selectedIndex].links3 || ""}
+                      onChange={(e) =>
+                        updateContent(selectedIndex, { links3: e.target.value })
+                      }
+                    />
+
+                    <label>Link4:</label>
+                    <input
+                      type="text"
+                      placeholder="Enter URL"
+                      value={previewContent[selectedIndex].links4 || ""}
+                      onChange={(e) =>
+                        updateContent(selectedIndex, { links4: e.target.value })
+                      }
+                    />
+                  </>
+                )}
+
                 {previewContent[selectedIndex].type === "link-image" && (
                   <>
-                    <label>Width(%):</label>
+                    <label>Size (%):</label>
                     <input
-                      type="number"
+                      type="range"
+                      min="10"
+                      max="100"
                       value={parseInt(
                         previewContent[selectedIndex].style.width.replace(
                           "%",
                           ""
                         )
                       )}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const newSize = e.target.value;
                         updateContent(selectedIndex, {
                           style: {
                             ...previewContent[selectedIndex].style,
-                            width: `${e.target.value}%`,
+                            width: `${newSize}%`,
+                            // height: `${newSize * 5}px`, // Adjusting height based on size percentage
                           },
-                        })
-                      }
+                        });
+                      }}
                     />
-                    <label>Height (px):</label>
-                    <input
-                      type="number"
-                      value={parseInt(
-                        previewContent[selectedIndex].style.height.replace(
-                          "px",
+                    <span>
+                      {parseInt(
+                        previewContent[selectedIndex].style.width.replace(
+                          "%",
                           ""
                         )
                       )}
-                      onChange={(e) =>
-                        updateContent(selectedIndex, {
-                          style: {
-                            ...previewContent[selectedIndex].style,
-                            height: `${e.target.value}px`,
-                          },
-                        })
-                      }
-                    />
+                      %
+                    </span>
+
                     <div className="editor-bg">
                       Image Background
                       <input
@@ -1325,22 +1535,6 @@ const sendEmail = async () => {
                         }
                       />
                     </div>
-                    <label>Image Alignment:</label>
-                    <select
-                      value={previewContent[selectedIndex].style.textAlign}
-                      onChange={(e) =>
-                        updateContent(selectedIndex, {
-                          style: {
-                            ...previewContent[selectedIndex].style,
-                            textAlign: e.target.value,
-                          },
-                        })
-                      }
-                    >
-                      <option value="left">Left</option>
-                      <option value="center">Center</option>
-                      <option value="right">Right</option>
-                    </select>
 
                     <label>Link:</label>
                     <input
@@ -1356,42 +1550,60 @@ const sendEmail = async () => {
 
                 {previewContent[selectedIndex].type === "logo" && (
                   <>
-                    <label>Width (%):</label>
+                    <label>Size (%):</label>
                     <input
-                      type="number"
-                      value={parseInt(
+                      type="range"
+                      min="10"
+                      max="100"
+                      value={
+                        parseInt(
+                          previewContent[selectedIndex].style.width.replace(
+                            "%",
+                            ""
+                          )
+                        ) || 50
+                      }
+                      onChange={(e) => {
+                        const newSize = e.target.value;
+                        updateContent(selectedIndex, {
+                          style: {
+                            ...previewContent[selectedIndex].style,
+                            width: `${newSize}%`,
+                            // height: `${newSize * 5}px`, // Adjusting height based on size percentage
+                          },
+                        });
+                      }}
+                    />
+                    <span>
+                      {parseInt(
                         previewContent[selectedIndex].style.width.replace(
                           "%",
                           ""
                         )
-                      )}
-                      onChange={(e) =>
-                        updateContent(selectedIndex, {
-                          style: {
-                            ...previewContent[selectedIndex].style,
-                            width: `${e.target.value}%`,
-                          },
-                        })
-                      }
-                    />
-                    <label>Height (px):</label>
+                      ) || 50}
+                      %
+                    </span>
+
+                    <label>Border Radius:</label>
                     <input
-                      type="number"
+                      type="range"
+                      min="0"
+                      max="50"
                       value={parseInt(
-                        previewContent[selectedIndex].style.height.replace(
-                          "px",
-                          ""
-                        )
+                        previewContent[
+                          selectedIndex
+                        ].style.borderRadius.replace("px", "")
                       )}
                       onChange={(e) =>
                         updateContent(selectedIndex, {
                           style: {
                             ...previewContent[selectedIndex].style,
-                            height: `${e.target.value}px`,
+                            borderRadius: `${e.target.value}px`,
                           },
                         })
                       }
                     />
+
                     <div className="editor-bg">
                       Image Background
                       <input
@@ -1410,63 +1622,170 @@ const sendEmail = async () => {
                         }
                       />
                     </div>
-                    <label>Image Alignment:</label>
-                    <select
-                      value={previewContent[selectedIndex].style.textAlign}
-                      onChange={(e) =>
+                  </>
+                )}
+
+                {previewContent[selectedIndex].type === "textwithimage" && (
+                  <>
+                    <div className="editor-bg">
+                      Background Color
+                      <input
+                        type="color"
+                        value={
+                          previewContent[selectedIndex].style.backgroundColor ||
+                          "#ffffff"
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            style: {
+                              ...previewContent[selectedIndex].style,
+                              backgroundColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="editor-bg">
+                      Text Color
+                      <input
+                        type="color"
+                        value={
+                          previewContent[selectedIndex].style.color || "#ffffff"
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            style: {
+                              ...previewContent[selectedIndex].style,
+                              color: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+
+                {previewContent[selectedIndex].type === "imagewithtext" && (
+                  <>
+                    <div className="editor-bg">
+                      Background Color
+                      <input
+                        type="color"
+                        value={
+                          previewContent[selectedIndex].style1
+                            .backgroundColor || "#ffffff"
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            style1: {
+                              ...previewContent[selectedIndex].style1,
+                              backgroundColor: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="editor-bg">
+                      Text Color
+                      <input
+                        type="color"
+                        value={
+                          previewContent[selectedIndex].style1.color ||
+                          "#ffffff"
+                        }
+                        onChange={(e) =>
+                          updateContent(selectedIndex, {
+                            style1: {
+                              ...previewContent[selectedIndex].style1,
+                              color: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+
+                {previewContent[selectedIndex].type === "video-icon" && (
+                  <>
+                    <label>Size (%):</label>
+                    <input
+                      type="range"
+                      min="50"
+                      max="100"
+                      value={parseInt(
+                        previewContent[selectedIndex].style.width.replace(
+                          "%",
+                          ""
+                        )
+                      )}
+                      onChange={(e) => {
+                        const newSize = e.target.value;
                         updateContent(selectedIndex, {
                           style: {
                             ...previewContent[selectedIndex].style,
-                            textAlign: e.target.value,
+                            width: `${newSize}%`,
+                            // height: `${newSize}px`, // Adjusting height based on size percentage
                           },
-                        })
+                        });
+                      }}
+                    />
+                    <span>
+                      {parseInt(
+                        previewContent[selectedIndex].style.width.replace(
+                          "%",
+                          ""
+                        )
+                      )}
+                      %
+                    </span>
+
+                    <label>Link:</label>
+                    <input
+                      type="text"
+                      placeholder="Enter URL"
+                      value={previewContent[selectedIndex].link || ""}
+                      onChange={(e) =>
+                        updateContent(selectedIndex, { link: e.target.value })
                       }
-                    >
-                      <option value="left">Left</option>
-                      <option value="center">Center</option>
-                      <option value="right">Right</option>
-                    </select>
+                    />
                   </>
                 )}
 
                 {previewContent[selectedIndex].type === "image" && (
                   <>
-                    <label>Width (%):</label>
+                    <label>Size (%):</label>
                     <input
-                      type="number"
+                      type="range"
+                      min="10"
+                      max="100"
                       value={parseInt(
                         previewContent[selectedIndex].style.width.replace(
                           "%",
                           ""
                         )
                       )}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const newSize = e.target.value;
                         updateContent(selectedIndex, {
                           style: {
                             ...previewContent[selectedIndex].style,
-                            width: `${e.target.value}%`,
+                            width: `${newSize}%`,
+                            // height: `${newSize * 5}px`, // Adjusting height based on size percentage
                           },
-                        })
-                      }
+                        });
+                      }}
                     />
-                    <label>Height (px):</label>
-                    <input
-                      type="number"
-                      value={parseInt(
-                        previewContent[selectedIndex].style.height.replace(
-                          "px",
+                    <span>
+                      {parseInt(
+                        previewContent[selectedIndex].style.width.replace(
+                          "%",
                           ""
                         )
                       )}
-                      onChange={(e) =>
-                        updateContent(selectedIndex, {
-                          style: {
-                            ...previewContent[selectedIndex].style,
-                            height: `${e.target.value}px`,
-                          },
-                        })
-                      }
-                    />
+                      %
+                    </span>
+
                     <div className="editor-bg">
                       Image Background
                       <input
@@ -1485,22 +1804,6 @@ const sendEmail = async () => {
                         }
                       />
                     </div>
-                    <label>Image Alignment:</label>
-                    <select
-                      value={previewContent[selectedIndex].style.textAlign}
-                      onChange={(e) =>
-                        updateContent(selectedIndex, {
-                          style: {
-                            ...previewContent[selectedIndex].style,
-                            textAlign: e.target.value,
-                          },
-                        })
-                      }
-                    >
-                      <option value="left">Left</option>
-                      <option value="center">Center</option>
-                      <option value="right">Right</option>
-                    </select>
                   </>
                 )}
               </div>
@@ -1602,6 +1905,30 @@ const sendEmail = async () => {
                       </div>
                     ) : null}
 
+                    {item.type === "video-icon" ? (
+                      <div className="video-icon">
+                        <img
+                          src={item.src1 || "https://via.placeholder.com/200"}
+                          alt="Editable"
+                          className="videoimg"
+                          title="Upload Thumbnail Image"
+                          style={item.style}
+                          onClick={() => uploadImage(index, 1)}
+                        />
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src={item.src2}
+                            className="video-btn"
+                            alt="icon"
+                          />
+                        </a>
+                      </div>
+                    ) : null}
+
                     {item.type === "head" && (
                       <div>
                         <p
@@ -1670,6 +1997,139 @@ const sendEmail = async () => {
                         />
                       </div>
                     )}
+
+                    {item.type === "icons" && (
+                      <div
+                        className="border"
+                        style={item.ContentStyle}
+                        key={index}
+                      >
+                        <div className="icon-containers">
+                          <a
+                            href={item.links1 || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleLinksClick2(e, item.links1)}
+                          >
+                            <img
+                              src={item.iconsrc1}
+                              alt="Facebook"
+                              className="icon"
+                              style={item.style1}
+                            />
+                          </a>
+
+                          <a
+                            href={item.links2 || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleLinksClick2(e, item.links2)}
+                          >
+                            <img
+                              src={item.iconsrc2}
+                              alt="Twitter"
+                              className="icon"
+                              rel="noopener noreferrer"
+                              style={item.style2}
+                            />
+                          </a>
+
+                          <a
+                            href={item.links3 || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleLinksClick2(e, item.links3)}
+                          >
+                            <img
+                              src={item.iconsrc3}
+                              alt="Instagram"
+                              className="icon"
+                              style={item.style3}
+                            />
+                          </a>
+
+                          <a
+                            href={item.links4 || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => handleLinksClick2(e, item.links4)}
+                          >
+                            <img
+                              src={item.iconsrc4}
+                              alt="Youtube"
+                              className="icon"
+                              style={item.style4}
+                            />
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    {item.type === "imagewithtext" ? (
+                      <div className="image-text-container">
+                        <div className="image-text-wrapper" style={item.style1}>
+                          <img
+                            src={item.src1 || "https://via.placeholder.com/200"}
+                            alt="Editable"
+                            className="image-item"
+                            title="Upload Image"
+                            onClick={() => uploadImage(index, 1)}
+                          />
+                          <p
+                            className="text-item"
+                            contentEditable
+                            suppressContentEditableWarning
+                            onClick={() => setModalIndex(index)} // Open modal for this index
+                            style={item.style}
+                            dangerouslySetInnerHTML={{ __html: item.content1 }}
+                          />
+                        </div>
+                        {modalIndex === index && ( // Open only for the selected index
+                          <ParaEditor
+                            isOpen={true}
+                            content={item.content1}
+                            onSave={(newContent) => {
+                              updateContent(index, { content1: newContent });
+                              setModalIndex(null); // Close modal after save
+                            }}
+                            onClose={() => setModalIndex(null)}
+                          />
+                        )}
+                      </div>
+                    ) : null}
+
+                    {item.type === "textwithimage" ? (
+                      <div className="image-text-container">
+                        <div className="image-text-wrapper" style={item.style}>
+                          <p
+                            className="text-item"
+                            contentEditable
+                            suppressContentEditableWarning
+                            onClick={() => setModalIndex(index)} // Open modal for this index
+                            style={item.style}
+                            dangerouslySetInnerHTML={{ __html: item.content2 }}
+                          />
+                          <img
+                            src={item.src2 || "https://via.placeholder.com/200"}
+                            alt="Editable"
+                            className="image-item"
+                            title="Upload Image"
+                            onClick={() => uploadImage(index, 2)}
+                          />
+                        </div>
+                        {modalIndex === index && ( // Open only for the selected index
+                          <ParaEditor
+                            isOpen={true}
+                            content={item.content2}
+                            onSave={(newContent) => {
+                              updateContent(index, { content2: newContent });
+                              setModalIndex(null); // Close modal after save
+                            }}
+                            onClose={() => setModalIndex(null)}
+                          />
+                        )}
+                      </div>
+                    ) : null}
 
                     {item.type === "logo" && (
                       <div className="border">
@@ -1810,50 +2270,56 @@ const sendEmail = async () => {
                   setEmailData({ ...emailData, previewtext: e.target.value })
                 }
               />
-                   
 
+              {/* Toggle Button for Scheduled Mail */}
+              <div className="toggle-container">
+                <span>
+                  {isScheduled
+                    ? "Scheduled Mail Enabled :"
+                    : "Scheduled Mail Disabled :"}
+                </span>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={isScheduled}
+                    onChange={() => setIsScheduled(!isScheduled)}
+                  />
+                  <span className="slider-send round"></span>
+                </label>
+              </div>
 
-          {/* Toggle Button for Scheduled Mail */}
-          <div className="toggle-container">
-            
-            <span>{isScheduled ? "Scheduled Mail Enabled :" : "Scheduled Mail Disabled :"}</span>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isScheduled}
-                onChange={() => setIsScheduled(!isScheduled)}
-              />
-              <span className="slider-send round"></span>
-            </label>
-          </div>
-
-          {/* Show scheduled time input only if the toggle is enabled */}
-          {isScheduled && (
-            <div>
-              <label htmlFor="schedule-time">Set Schedule Time:</label>{" "}
-               <input
-        type="datetime-local"
-        value={emailData.scheduledTime}
-        onChange={(e) =>
-          setEmailData({ ...emailData, scheduledTime: e.target.value })
-        }
-      />
-            </div>
-          )}
+              {/* Show scheduled time input only if the toggle is enabled */}
+              {isScheduled && (
+                <div>
+                  <label htmlFor="schedule-time">Set Schedule Time:</label>{" "}
+                  <input
+                    type="datetime-local"
+                    value={emailData.scheduledTime}
+                    onChange={(e) =>
+                      setEmailData({
+                        ...emailData,
+                        scheduledTime: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              )}
               <button
                 onClick={sendEmail}
                 className="modal-button"
-              disabled={isLoading || isScheduled} // Disable if scheduled is enabled
+                disabled={isLoading || isScheduled} // Disable if scheduled is enabled
               >
                 {isLoading ? "Processing..." : "Send Now"}
               </button>
-               <button onClick={sendscheduleEmail}
-                disabled={isLoadingsch || !isScheduled} // Disable if scheduled is not enabled
-                className="modal-button">
-                {isLoadingsch ? "Processing..." : "Scheduled"}
-               </button>
               <button
-                onClick={() => setModalOpen(false)}                
+                onClick={sendscheduleEmail}
+                disabled={isLoadingsch || !isScheduled} // Disable if scheduled is not enabled
+                className="modal-button"
+              >
+                {isLoadingsch ? "Processing..." : "Scheduled"}
+              </button>
+              <button
+                onClick={() => setModalOpen(false)}
                 className="modal-button"
               >
                 Cancel

@@ -6,21 +6,19 @@ import "./SendbulkModal.css";
 import apiConfig from "../apiconfig/apiConfig";
 import { useNavigate } from "react-router-dom";
 
-const SendbulkModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
+const SendbulkModal = ({ isOpen, onClose, previewContent = [], bgColor }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-    const [isProcessingsch, setIsProcessingsch] = useState(false);
+  const [isProcessingsch, setIsProcessingsch] = useState(false);
 
   const [isScheduled, setIsScheduled] = useState(false); // Toggle state
   const [previewtext, setPreviewtext] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const campaign = JSON.parse(localStorage.getItem("campaign"));
-  const navigate=useNavigate();
-
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen) {
@@ -39,186 +37,196 @@ const SendbulkModal = ({ isOpen, onClose, previewContent = [],bgColor}) => {
           toast.error("Failed to fetch groups.");
         });
     }
-  }, [isOpen,user]);
+  }, [isOpen, user]);
 
-  
-const sendscheduleBulk = async () => {
-
-   if (!selectedGroup || !message || !previewtext) {
-    toast.warning("Please select a group and enter a message and preview text.");
-    return;
-  }
-
-  if (!previewContent || previewContent.length === 0) {
-    toast.warning("No preview content available.");
-    return;
-  }
-  if (!scheduledTime) {
-        toast.error("Please Select Date And Time");
-        return;
-    }
-
-  setIsProcessingsch(true);
-
-
-  try {
-    // Fetch students from the selected group
-    const studentsResponse = await axios.get(
-      `${apiConfig.baseURL}/api/stud/groups/${selectedGroup}/students`
-    );
-    const students = studentsResponse.data;
-
-    if (students.length === 0) {
-      toast.warning("No students found in the selected group.");
-      setIsProcessingsch(false);
+  const sendscheduleBulk = async () => {
+    if (!selectedGroup || !message || !previewtext) {
+      toast.warning(
+        "Please select a group and enter a message and preview text."
+      );
       return;
     }
-    
-        // Store initial campaign history with "Pending" status
-        const campaignHistoryData = {
-            campaignname: campaign.camname,
-            groupname: groups.find(group => group._id === selectedGroup)?.name, // Get the group name from the groups array
-            totalcount:students.length,
-            recipients:"no mail",
-            sendcount: 0,
-            failedcount: 0,
-            failedEmails:0,
-            sentEmails:0,
-            subject:message,
-            exceldata:[{}],
-            previewtext,
-            previewContent,bgColor,
-            scheduledTime: new Date(scheduledTime).toISOString(),  
-            status: "Scheduled On",
-            senddate: new Date().toLocaleString(),
-            user: user.id,
-            groupId:selectedGroup,
-        };
 
-        const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
-        console.log("Initial Campaign History Saved:", campaignResponse.data);
-        toast.success("Email scheduled successfully!");
-        navigate("/home");
+    if (!previewContent || previewContent.length === 0) {
+      toast.warning("No preview content available.");
+      return;
+    }
+    if (!scheduledTime) {
+      toast.error("Please Select Date And Time");
+      return;
+    }
+
+    setIsProcessingsch(true);
+
+    try {
+      // Fetch students from the selected group
+      const studentsResponse = await axios.get(
+        `${apiConfig.baseURL}/api/stud/groups/${selectedGroup}/students`
+      );
+      const students = studentsResponse.data;
+
+      if (students.length === 0) {
+        toast.warning("No students found in the selected group.");
+        setIsProcessingsch(false);
+        return;
       }
-      catch (error) {
-        console.error("Error scheduling email:", error);
-        toast.error("Failed to schedule email.");
-    } 
-    finally{
+
+      // Store initial campaign history with "Pending" status
+      const campaignHistoryData = {
+        campaignname: campaign.camname,
+        groupname: groups.find((group) => group._id === selectedGroup)?.name, // Get the group name from the groups array
+        totalcount: students.length,
+        recipients: "no mail",
+        sendcount: 0,
+        failedcount: 0,
+        failedEmails: 0,
+        sentEmails: 0,
+        subject: message,
+        exceldata: [{}],
+        previewtext,
+        previewContent,
+        bgColor,
+        scheduledTime: new Date(scheduledTime).toISOString(),
+        status: "Scheduled On",
+        senddate: new Date().toLocaleString(),
+        user: user.id,
+        groupId: selectedGroup,
+      };
+
+      const campaignResponse = await axios.post(
+        `${apiConfig.baseURL}/api/stud/camhistory`,
+        campaignHistoryData
+      );
+      console.log("Initial Campaign History Saved:", campaignResponse.data);
+      toast.success("Email scheduled successfully!");
+      navigate("/home");
+    } catch (error) {
+      console.error("Error scheduling email:", error);
+      toast.error("Failed to schedule email.");
+    } finally {
       setIsProcessingsch(false);
     }
-  }
+  };
 
-const handleSend = async () => {
-  if (!selectedGroup || !message || !previewtext) {
-    toast.warning("Please select a group and enter a message and preview text.");
-    return;
-  }
+  const handleSend = async () => {
+    if (!selectedGroup || !message || !previewtext) {
+      toast.warning(
+        "Please select a group and enter a message and preview text."
+      );
+      return;
+    }
 
-  if (!previewContent || previewContent.length === 0) {
-    toast.warning("No preview content available.");
-    return;
-  }
-       setIsProcessing(true);
-           navigate("/home");
-
-
+    if (!previewContent || previewContent.length === 0) {
+      toast.warning("No preview content available.");
+      return;
+    }
+    setIsProcessing(true);
+    navigate("/home");
 
     let sentEmails = [];
     let failedEmails = [];
 
-  try {
-    // Fetch students from the selected group
-    const studentsResponse = await axios.get(
-      `${apiConfig.baseURL}/api/stud/groups/${selectedGroup}/students`
-    );
-    const students = studentsResponse.data;
+    try {
+      // Fetch students from the selected group
+      const studentsResponse = await axios.get(
+        `${apiConfig.baseURL}/api/stud/groups/${selectedGroup}/students`
+      );
+      const students = studentsResponse.data;
 
-    if (students.length === 0) {
-      toast.warning("No students found in the selected group.");
-      setIsProcessing(false);
-      return;
-    }
-    
-        // Store initial campaign history with "Pending" status
-        const campaignHistoryData = {
-            campaignname: campaign.camname,
-            groupname: groups.find(group => group._id === selectedGroup)?.name, // Get the group name from the groups array
-            totalcount:students.length,
-            recipients:"no mail",
-            sendcount: 0,
-            failedcount: 0,
-            failedEmails:0,
-            sentEmails:0,
-            subject:message,
-            exceldata:[{}],
-            previewtext,
-            previewContent,bgColor,
-            scheduledTime:new Date(),
-            status: "Pending",
-            senddate: new Date().toLocaleString(),
-            user: user.id,
-            groupId:selectedGroup,
-        };
+      if (students.length === 0) {
+        toast.warning("No students found in the selected group.");
+        setIsProcessing(false);
+        return;
+      }
 
-        const campaignResponse = await axios.post(`${apiConfig.baseURL}/api/stud/camhistory`, campaignHistoryData);
-        const campaignId = campaignResponse.data.id; // Assume response includes campaign ID
-        console.log("Initial Campaign History Saved:", campaignResponse.data);
-
-
-  
-    for (const student of students) {
-      const personalizedContent = previewContent.map((item) => {
-        const personalizedItem = { ...item };
-
-        if (item.content) {
-          Object.entries(student).forEach(([key, value]) => {
-            const placeholderRegex = new RegExp(`\\{?${key}\\}?`, "g");
-            const cellValue = value != null ? String(value).trim() : "";
-            personalizedItem.content = personalizedItem.content.replace(placeholderRegex, cellValue);
-          });
-        }
-        return personalizedItem;
-      });
-
-      const emailData = {
-        recipientEmail: student.Email,
+      // Store initial campaign history with "Pending" status
+      const campaignHistoryData = {
+        campaignname: campaign.camname,
+        groupname: groups.find((group) => group._id === selectedGroup)?.name, // Get the group name from the groups array
+        totalcount: students.length,
+        recipients: "no mail",
+        sendcount: 0,
+        failedcount: 0,
+        failedEmails: 0,
+        sentEmails: 0,
         subject: message,
-        body: JSON.stringify(personalizedContent),
-        bgColor,
+        exceldata: [{}],
         previewtext,
-        userId: user.id,
+        previewContent,
+        bgColor,
+        scheduledTime: new Date(),
+        status: "Pending",
+        senddate: new Date().toLocaleString(),
+        user: user.id,
         groupId: selectedGroup,
       };
 
-      try {
-        console.log("Sending email data:", emailData);
-        await axios.post(`${apiConfig.baseURL}/api/stud/sendbulkEmail`, emailData);
-        sentEmails.push(student.Email);
-      } catch (error) {
-        console.error(`Failed to send email to ${student.Email}:`, error);
-        failedEmails.push(student.Email);
+      const campaignResponse = await axios.post(
+        `${apiConfig.baseURL}/api/stud/camhistory`,
+        campaignHistoryData
+      );
+      const campaignId = campaignResponse.data.id; // Assume response includes campaign ID
+      console.log("Initial Campaign History Saved:", campaignResponse.data);
+
+      for (const student of students) {
+        const personalizedContent = previewContent.map((item) => {
+          const personalizedItem = { ...item };
+
+          if (item.content) {
+            Object.entries(student).forEach(([key, value]) => {
+              const placeholderRegex = new RegExp(`\\{?${key}\\}?`, "g");
+              const cellValue = value != null ? String(value).trim() : "";
+              personalizedItem.content = personalizedItem.content.replace(
+                placeholderRegex,
+                cellValue
+              );
+            });
+          }
+          return personalizedItem;
+        });
+
+        const emailData = {
+          recipientEmail: student.Email,
+          subject: message,
+          body: JSON.stringify(personalizedContent),
+          bgColor,
+          previewtext,
+          userId: user.id,
+          groupId: selectedGroup,
+        };
+
+        try {
+          console.log("Sending email data:", emailData);
+          await axios.post(
+            `${apiConfig.baseURL}/api/stud/sendbulkEmail`,
+            emailData
+          );
+          sentEmails.push(student.Email);
+        } catch (error) {
+          console.error(`Failed to send email to ${student.Email}:`, error);
+          failedEmails.push(student.Email);
+        }
       }
-    }
 
       // Update campaign history with final status
-        const finalStatus = failedEmails.length > 0 ? "Failed" : "Success";
-        await axios.put(`${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`, {
-            sendcount: sentEmails.length,
-            sentEmails:sentEmails,
-            failedEmails: failedEmails.length > 0 ? failedEmails : 0,  
-            failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
-            status: finalStatus,
-        });
-    toast.success("Emails sent successfully!");
-  
-  } catch (error) {
-    console.error("Error sending emails:", error);
-    toast.error("Failed to send emails.");
-    setIsProcessing(false);
-  }
-};
-
+      const finalStatus = failedEmails.length > 0 ? "Failed" : "Success";
+      await axios.put(
+        `${apiConfig.baseURL}/api/stud/camhistory/${campaignId}`,
+        {
+          sendcount: sentEmails.length,
+          sentEmails: sentEmails,
+          failedEmails: failedEmails.length > 0 ? failedEmails : 0,
+          failedcount: failedEmails.length > 0 ? failedEmails.length : 0, // Ensure failedcount is 0, not an empty array
+          status: finalStatus,
+        }
+      );
+      toast.success("Emails sent successfully!");
+    } catch (error) {
+      console.error("Error sending emails:", error);
+      toast.error("Failed to send emails.");
+      setIsProcessing(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -262,8 +270,11 @@ const handleSend = async () => {
 
           {/* Toggle Button for Scheduled Mail */}
           <div className="toggle-container">
-            
-            <span>{isScheduled ? "Scheduled Mail Enabled :" : "Scheduled Mail Disabled :"}</span>
+            <span>
+              {isScheduled
+                ? "Scheduled Mail Enabled :"
+                : "Scheduled Mail Disabled :"}
+            </span>
             <label className="switch">
               <input
                 type="checkbox"
@@ -306,16 +317,17 @@ const handleSend = async () => {
           </div>
         </div>
       </div>
-<ToastContainer className="custom-toast"
-  position="bottom-center"
-      autoClose= {2000} 
-      hideProgressBar={true} // Disable progress bar
-      closeOnClick= {false}
-      closeButton={false}
-      pauseOnHover= {true}
-      draggable= {true}
-      theme= "light" // Optional: Choose theme ('light', 'dark', 'colored')
-/>
+      <ToastContainer
+        className="custom-toast"
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={true} // Disable progress bar
+        closeOnClick={false}
+        closeButton={false}
+        pauseOnHover={true}
+        draggable={true}
+        theme="light" // Optional: Choose theme ('light', 'dark', 'colored')
+      />
     </div>
   );
 };

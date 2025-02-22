@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
-import './ParaEditor.css';
+import React, { useState, useRef } from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import "./ParaEditor.css";
 
 const ParaEditor = ({ isOpen, content, onSave, onClose }) => {
   const [editorContent, setEditorContent] = useState(content);
   const editorRef = useRef(null);
-  const apiKey = 'hddpazfss5mb3ppinipav37ap1zt3pqs9oz3c897fidqfddq'; // Replace with your TinyMCE API key
+  const apiKey = "hddpazfss5mb3ppinipav37ap1zt3pqs9oz3c897fidqfddq"; // Replace with your TinyMCE API key
 
   const handleInsertVariable = (value) => {
     if (editorRef.current && editorRef.current.editor) {
@@ -30,8 +30,7 @@ const ParaEditor = ({ isOpen, content, onSave, onClose }) => {
           init={{
             menubar: true,
             branding: false,
-            plugins: [
-               'lists', 'link', 'textcolor', 'colorpicker'],
+            plugins: ["lists", "link", "textcolor", "colorpicker"],
             toolbar: `
               undo redo | bold italic underline | fontselect fontsize | fontselect fontfamily | 
               alignleft aligncenter alignright | 
@@ -41,12 +40,16 @@ const ParaEditor = ({ isOpen, content, onSave, onClose }) => {
         />
 
         <div className="button-group">
-          <button className='para-btn' onClick={() => onSave(editorContent)}>Save</button>
-          <button className='para-btn' onClick={onClose}>Cancel</button>
+          <button className="para-btn" onClick={() => onSave(editorContent)}>
+            Save
+          </button>
+          <button className="para-btn" onClick={onClose}>
+            Cancel
+          </button>
           <select
             onChange={(e) => {
               handleInsertVariable(e.target.value);
-              e.target.value = ''; // Reset selection after insertion
+              e.target.value = ""; // Reset selection after insertion
             }}
             className="select-variable-para"
           >
