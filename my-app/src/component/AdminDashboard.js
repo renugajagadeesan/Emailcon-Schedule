@@ -6,12 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import apiconfig from '../apiconfig/apiConfig.js'
+import CryptoJS from 'crypto-js';
 
 function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false); // State for the loader
   const [loadingUserId, setLoadingUserId] = useState(null); // State for the specific user being updated
   const navigate = useNavigate();
+
+  const encryptSMTPPassword = (password) => {
+    const secretKey = process.env.REACT_APP_SECRET_KEY || 'default-key';
+    return CryptoJS.AES.encrypt(password, secretKey).toString();
+  };
 
   useEffect(() => {
     // Check if the adminToken is present in localStorage
@@ -85,7 +91,7 @@ function AdminDashboard() {
               <td>{user.email}</td>
               <td>{user.username}</td>
               <td>{user.password}</td>
-              <td>{user.smtppassword}</td>
+              <td>{encryptSMTPPassword(user.smtppassword)}</td>
               <td>{user.isActive ? "Active" : "Inactive"}</td>
               <td>
                 {loading && loadingUserId === user._id ? (
