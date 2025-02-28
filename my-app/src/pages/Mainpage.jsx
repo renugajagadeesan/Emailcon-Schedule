@@ -303,7 +303,7 @@ const Mainpage = () => {
       {
         type: "video-icon",
         src1: "https://zawiya.org/wp-content/themes/zawiyah/images/thumbnail-default.jpg",
-        src2: "https://i.ibb.co/Ngg9QVdM/output-onlinegiftools.gif",
+        src2: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2J2eGkwZHZ6ZmQxMzV2OWQzOG1qazZsNGs1dXNxaWV3NTJqbHd0YSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/gcBq6Nom44PGBoUhWm/giphy.gif",
         link: "https://www.imageconindia.com/",
         style: {
           width: "100%",
