@@ -9,6 +9,8 @@ import Campaign from "../models/Campaign.js";
 import User from "../models/User.js"; // Ensure you import the User model
 import Camhistory from "../models/Camhistory.js";
 // import ExcelStudent from "../models/Excelstudent.js";
+import { decryptPassword } from "../config/encryption.js";
+
 
 const router = express.Router();
 
@@ -47,7 +49,6 @@ router.post('/sendtestmail', async (req, res) => {
       email,
       smtppassword
     } = user;
-
     // Determine the transporter based on email provider
     let transporter;
 
@@ -56,7 +57,7 @@ router.post('/sendtestmail', async (req, res) => {
         service: "gmail",
         auth: {
           user: email,
-          pass: smtppassword,
+          pass: decryptPassword(smtppassword),
         },
       });
     } else {
@@ -66,7 +67,7 @@ router.post('/sendtestmail', async (req, res) => {
         secure: true, // Use SSL/TLS
         auth: {
           user: email,
-          pass: smtppassword,
+          pass: decryptPassword(smtppassword),
         },
         tls: {
           // Do not fail on invalid certificates
@@ -113,7 +114,9 @@ router.post('/sendtestmail', async (req, res) => {
         </tr>
     </table>`
 
-      } else if (item.type === 'icons') {
+      }
+
+      else if (item.type === 'icons') {
         return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${item.ContentStyle.backgroundColor || 'white'}; border-radius:${item.ContentStyle.borderRadius || '10px'}; margin:15px 0px !important;">
             <tr>
                 <td align="${item.ContentStyle.textAlign}" style="padding: 20px; text-align: center;">
@@ -144,8 +147,11 @@ router.post('/sendtestmail', async (req, res) => {
                 </td>
             </tr>
         </table>`;
-      } else if (item.type === 'video-icon') {
-        return `
+    }
+
+    
+else if (item.type === 'video-icon') {
+  return `
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
 <tr>
   <td align="center">
@@ -164,7 +170,9 @@ router.post('/sendtestmail', async (req, res) => {
   </td>
 </tr>
 </table>`;
-      } else if (item.type === 'imagewithtext') {
+}
+
+      else if (item.type === 'imagewithtext') {
         return `<table class="image-text" style="width:100%;height:220px !important;background-color:${item.style1.backgroundColor || '#f4f4f4'}; border-collapse:seperate;border-radius:${item.style1.borderRadius || '10px'};margin:15px 0px !important">
         <tr>
             <td style = "vertical-align:top;padding:10px;" >
@@ -177,8 +185,10 @@ router.post('/sendtestmail', async (req, res) => {
             </td>
         </tr>
     </table>`;
-      } else if (item.type === 'textwithimage') {
-        return `<table class="image-text" style="width:100%;height:220px !important;background-color:${item.style.backgroundColor || '#f4f4f4'}; border-collapse:seperate;border-radius:${item.style.borderRadius || '10px'};margin:15px 0px !important">
+      }
+      
+          else if (item.type === 'textwithimage') {
+            return `<table class="image-text" style="width:100%;height:220px !important;background-color:${item.style.backgroundColor || '#f4f4f4'}; border-collapse:seperate;border-radius:${item.style.borderRadius || '10px'};margin:15px 0px !important">
         <tr>
           <td style = "vertical-align:top;padding:10px;color:${item.style.color || 'black'};" >
                 <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
@@ -190,7 +200,8 @@ router.post('/sendtestmail', async (req, res) => {
             </td>         
         </tr>
     </table>`
-      } else if (item.type === 'link-image') {
+          }
+      else if (item.type === 'link-image') {
         return `<div style="text-align:${item.style.textAlign};margin:0 auto !important">
         <a href="${item.link || '#'}" taget="_blank" style="text-decoration:none;"><img src="${item.src}" style="margin-top:10px;width:${item.style.width};text-align:${item.style.textAlign};pointer-events:none;height:${item.style.height};border-radius:10px;background-color:${item.style.backgroundColor}"/></a>
         </div>`;
@@ -332,7 +343,7 @@ router.post('/sendexcelEmail', async (req, res) => {
       service: "gmail",
       auth: {
         user: email,
-        pass: smtppassword,
+        pass: decryptPassword(smtppassword),
       },
     });
   } else {
@@ -342,7 +353,7 @@ router.post('/sendexcelEmail', async (req, res) => {
       secure: true, // Use SSL/TLS
       auth: {
         user: email,
-        pass: smtppassword,
+        pass: decryptPassword(smtppassword),
       },
       tls: {
         // Do not fail on invalid certificates
@@ -356,62 +367,52 @@ router.post('/sendexcelEmail', async (req, res) => {
     // Parse the body string as JSON
     const bodyElements = JSON.parse(body);
 
-    // Function to generate HTML from JSON structure
-    const generateHtml = (element) => {
-      const {
-        type,
-        content,
-        content1,
-        content2,
-        src1,
-        src2,
-        src,
-        style,
-        style1,
-        style2,
-        style3,
-        style4,
-        link,
-        links1,
-        links2,
-        links3,
-        links4,
-        ContentStyle,
-        iconsrc1,
-        iconsrc2,
-        iconsrc3,
-        iconsrc4,
-        link2,
-        link1,
-        buttonStyle1,
-        buttonStyle2,
-      } = element;
-      const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleStringvideo = Object.entries(style || {})
-        .filter(([key]) => key === 'width' || key === 'height')
-        .map(([key, value]) => `${key}:${value}`)
-        .join(';');
-
-      switch (type) {
-        case 'logo':
-          return `<div style="margin:0 auto !important;${styleString};">
+   // Function to generate HTML from JSON structure
+   const generateHtml = (element) => {
+    const {
+      type,
+      content,
+      content1,
+      content2,
+      src1,
+      src2,
+      src,
+      style,
+      style1,style2,style3,style4,
+      link,links1,links2,links3,links4,
+      ContentStyle,
+      iconsrc1,iconsrc2,iconsrc3,iconsrc4,
+      link2,
+      link1,
+      buttonStyle1,
+      buttonStyle2,
+    } = element;
+    const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleStringvideo = Object.entries(style || {})
+    .filter(([key]) => key === 'width' || key === 'height')
+    .map(([key, value]) => `${key}:${value}`)
+    .join(';');
+  
+    switch (type) {
+      case 'logo':
+        return `<div style="margin:0 auto !important;${styleString};">
                   <img src="${src}" style="margin-top:10px;${styleString};" alt="image"/>
                 </div>`;
 
-        case 'image':
-          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+      case 'image':
+        return `<div class="img-case" style="margin:0 auto !important;${styleString};">
        <img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />
        </div>`;
 
-        case 'imagewithtext':
-          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
+      case 'imagewithtext':
+        return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
       <tr>
           <td style = "vertical-align:top;padding:10px;">
               <img  src="${src1}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
@@ -424,8 +425,8 @@ router.post('/sendexcelEmail', async (req, res) => {
       </tr>
   </table>`;
 
-        case 'textwithimage':
-          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
+      case 'textwithimage':
+        return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
       <tr>
         <td style = "vertical-align:top;padding:10px;${styleString};">
               <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
@@ -439,8 +440,8 @@ router.post('/sendexcelEmail', async (req, res) => {
       </tr>
   </table>`;
 
-        case 'video-icon':
-          return `
+  case 'video-icon':
+    return `
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
 <tr>
   <td align="center">
@@ -460,10 +461,10 @@ router.post('/sendexcelEmail', async (req, res) => {
 </tr>
 </table>
   `;
+    
 
-
-        case 'icons':
-          return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
+  case 'icons':
+    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
         <tr>
             <td style="padding: 20px; text-align:center;${ContentStyleString};">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
@@ -494,13 +495,13 @@ router.post('/sendexcelEmail', async (req, res) => {
         </tr>
     </table>`;
 
-        case 'link-image':
-          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+      case 'link-image':
+        return `<div class="img-case" style="margin:0 auto !important;${styleString};">
         <a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>
         </div>`;
 
-        case 'multi-image':
-          return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
+      case 'multi-image':
+        return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
           <tr>
               <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
                   <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
@@ -516,22 +517,22 @@ router.post('/sendexcelEmail', async (req, res) => {
               </td>
           </tr>
         </table>`;
-        case 'head':
-          return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
-        case 'para':
-          return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
-        case 'button':
-          return `<div style="margin:20px auto 0 auto;text-align:center;">
+      case 'head':
+        return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
+      case 'para':
+        return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
+      case 'button':
+        return `<div style="margin:20px auto 0 auto;text-align:center;">
                   <a href = "${link}"
                   target = "_blank"
                   style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
                     ${content}
                   </a>
                 </div>`;
-        default:
-          return '';
-      }
-    };
+      default:
+        return '';
+    }
+  };
 
     const dynamicHtml = bodyElements.map(generateHtml).join('');
 
@@ -637,7 +638,7 @@ router.post('/sendexcelEmail', async (req, res) => {
   }
 });
 
-
+  
 //Sendbulk mail using group
 router.post('/sendbulkEmail', async (req, res) => {
   const {
@@ -673,7 +674,7 @@ router.post('/sendbulkEmail', async (req, res) => {
       service: "gmail",
       auth: {
         user: email,
-        pass: smtppassword,
+        pass: decryptPassword(smtppassword),
       },
     });
   } else {
@@ -683,7 +684,7 @@ router.post('/sendbulkEmail', async (req, res) => {
       secure: true, // Use SSL/TLS
       auth: {
         user: email,
-        pass: smtppassword,
+        pass: decryptPassword(smtppassword),
       },
       tls: {
         // Do not fail on invalid certificates
@@ -697,62 +698,52 @@ router.post('/sendbulkEmail', async (req, res) => {
     // Parse the body string as JSON
     const bodyElements = JSON.parse(body);
 
-    // Function to generate HTML from JSON structure
-    const generateHtml = (element) => {
-      const {
-        type,
-        content,
-        content1,
-        content2,
-        src1,
-        src2,
-        src,
-        style,
-        style1,
-        style2,
-        style3,
-        style4,
-        link,
-        links1,
-        links2,
-        links3,
-        links4,
-        ContentStyle,
-        iconsrc1,
-        iconsrc2,
-        iconsrc3,
-        iconsrc4,
-        link2,
-        link1,
-        buttonStyle1,
-        buttonStyle2,
-      } = element;
-      const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
-      const styleStringvideo = Object.entries(style || {})
-        .filter(([key]) => key === 'width' || key === 'height')
-        .map(([key, value]) => `${key}:${value}`)
-        .join(';');
-
-      switch (type) {
-        case 'logo':
-          return `<div style="margin:0 auto !important;${styleString};">
+   // Function to generate HTML from JSON structure
+   const generateHtml = (element) => {
+    const {
+      type,
+      content,
+      content1,
+      content2,
+      src1,
+      src2,
+      src,
+      style,
+      style1,style2,style3,style4,
+      link,links1,links2,links3,links4,
+      ContentStyle,
+      iconsrc1,iconsrc2,iconsrc3,iconsrc4,
+      link2,
+      link1,
+      buttonStyle1,
+      buttonStyle2,
+    } = element;
+    const ContentStyleString = Object.entries(ContentStyle || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString4 = Object.entries(style4 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString3 = Object.entries(style3 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString2 = Object.entries(style2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString1 = Object.entries(style1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleString = Object.entries(style || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const stylebuttonString1 = Object.entries(buttonStyle1 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const stylebuttonString2 = Object.entries(buttonStyle2 || {}).map(([key, value]) => `${key.replace(/([A-Z])/g, '-$1').toLowerCase()}:${value}`).join(';');
+    const styleStringvideo = Object.entries(style || {})
+    .filter(([key]) => key === 'width' || key === 'height')
+    .map(([key, value]) => `${key}:${value}`)
+    .join(';');
+  
+    switch (type) {
+      case 'logo':
+        return `<div style="margin:0 auto !important;${styleString};">
                   <img src="${src}" style="margin-top:10px;${styleString};" alt="image"/>
                 </div>`;
 
-        case 'image':
-          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+      case 'image':
+        return `<div class="img-case" style="margin:0 auto !important;${styleString};">
        <img src="${src}" style="${styleString};border-radius:10px;margin-top:10px;" alt="image" />
        </div>`;
 
-        case 'imagewithtext':
-          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
+      case 'imagewithtext':
+        return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString1};">
       <tr>
           <td style = "vertical-align:top;padding:10px;">
               <img  src="${src1}" style="border-radius:10px;width:200px !important;height:auto;pointer-events:none !important; object-fit:cover;" alt="image"/>                  
@@ -765,8 +756,8 @@ router.post('/sendbulkEmail', async (req, res) => {
       </tr>
   </table>`;
 
-        case 'textwithimage':
-          return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
+      case 'textwithimage':
+        return `<table class="image-text" style="width:100%;height:220px !important;border-collapse:seperate;border-radius:10px;margin:15px 0px !important;${styleString};">
       <tr>
         <td style = "vertical-align:top;padding:10px;${styleString};">
               <div class="img-para" style="overflow: auto;max-height: 200px !important;font-size:18px;">
@@ -780,8 +771,8 @@ router.post('/sendbulkEmail', async (req, res) => {
       </tr>
   </table>`;
 
-        case 'video-icon':
-          return `
+  case 'video-icon':
+    return `
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
 <tr>
   <td align="center">
@@ -801,10 +792,10 @@ router.post('/sendbulkEmail', async (req, res) => {
 </tr>
 </table>
   `;
+    
 
-
-        case 'icons':
-          return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
+  case 'icons':
+    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${ContentStyleString};margin:15px 0px !important;">
         <tr>
             <td style="padding: 20px; text-align:center;${ContentStyleString};">
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
@@ -835,13 +826,13 @@ router.post('/sendbulkEmail', async (req, res) => {
         </tr>
     </table>`;
 
-        case 'link-image':
-          return `<div class="img-case" style="margin:0 auto !important;${styleString};">
+      case 'link-image':
+        return `<div class="img-case" style="margin:0 auto !important;${styleString};">
         <a href = "${link}" target = "_blank" style="text-decoration:none;"><img src="${src}" style="${styleString};margin-top:10px;border-radius:10px;" alt="image"/></a>
         </div>`;
 
-        case 'multi-image':
-          return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
+      case 'multi-image':
+        return `<table class="multi" style="width:100%; border-collapse:collapse;margin:10px auto !important;">
           <tr>
               <td style="width:50%;text-align:center;padding:8px; vertical-align:top;">
                   <img src="${src1}" style="border-radius:10px;object-fit:contain;height:230px !important;width:100%;pointer-events:none !important; object-fit:cover; ${styleString}" alt="image"/>
@@ -857,22 +848,22 @@ router.post('/sendbulkEmail', async (req, res) => {
               </td>
           </tr>
         </table>`;
-        case 'head':
-          return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
-        case 'para':
-          return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
-        case 'button':
-          return `<div style="margin:20px auto 0 auto;text-align:center;">
+      case 'head':
+        return `<p class="head" style="${styleString};border-radius:10px;padding:10px;font-weight:bold;">${content}</p>`;
+      case 'para':
+        return `<div class="para" style="${styleString};border-radius:10px;padding:10px;">${content}</div>`;
+      case 'button':
+        return `<div style="margin:20px auto 0 auto;text-align:center;">
                   <a href = "${link}"
                   target = "_blank"
                   style = "${styleString};display:inline-block;padding:12px 25px;text-decoration:none;" >
                     ${content}
                   </a>
                 </div>`;
-        default:
-          return '';
-      }
-    };
+      default:
+        return '';
+    }
+  };
 
     const dynamicHtml = bodyElements.map(generateHtml).join('');
 
